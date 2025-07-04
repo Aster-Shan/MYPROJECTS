@@ -1,4 +1,5 @@
-import ContactPage from "@/pages/Contact";
+import AboutPage from "@/pages/About";
+import BlogPage from "@/pages/blogs/Blog";
 import ErrorPage from "@/pages/Error";
 import HomePage from "@/pages/Home";
 import RootLayout from "@/pages/RootLayout";
@@ -11,7 +12,8 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, Component: HomePage },
-      { path: "contact", Component: ContactPage },
+      { path: "about", Component: AboutPage },
+      { path: "blogs", Component: BlogPage },
     ],
   },
 ]);

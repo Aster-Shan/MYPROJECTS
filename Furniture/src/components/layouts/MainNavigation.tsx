@@ -57,7 +57,7 @@ export function MainNavigation({ items }: MainNavigationProps) {
                     {items[0].card.map((item) => (
                       <ListItem
                         key={item.title}
-                        href={item.href}
+                        href={String(item.href)}
                         title={item.title}
                       >
                         {item.description}
