@@ -5,7 +5,7 @@ import MobileNavigation from "./MobileNavigation";
 
 function Header() {
   return (
-    <header className="w-full border-b border-gray-200">
+    <header className="w-full border-b border-gray-200 fixed top-0 bg-white">
       <nav className="container flex items-center h-18 mx-auto">
         <MainNavigation items={siteConfig.mainNav} />
         <MobileNavigation items={siteConfig.mainNav}></MobileNavigation>

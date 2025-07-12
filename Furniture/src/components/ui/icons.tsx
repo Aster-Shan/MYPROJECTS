@@ -1,4 +1,5 @@
 import {
+  ExclamationTriangleIcon,
   HamburgerMenuIcon,
   HomeIcon,
   PaperPlaneIcon,
@@ -26,4 +27,5 @@ export const Icons = {
   home: HomeIcon,
   menu: HamburgerMenuIcon,
   PaperPlane: PaperPlaneIcon,
+  ExclamationTriangle: ExclamationTriangleIcon,
 };
