@@ -1,4 +1,6 @@
+import CarouselCard from "@/components/products/CarouselCard";
 import { Button } from "@/components/ui/button";
+import { products } from "@/data/products";
 import { Link } from "react-router-dom";
 import Couch from "../data/images/couch.png";
 
@@ -36,6 +38,9 @@ function Home() {
         <div className="md:w-1/2 flex justify-center lg:w-3/5">
           <img src={Couch} alt="couch" className="max-w-full h-auto" />
         </div>
+      </div>
+      <div className="items-center justify-center">
+        <CarouselCard products={products}></CarouselCard>
       </div>
     </div>
   );
