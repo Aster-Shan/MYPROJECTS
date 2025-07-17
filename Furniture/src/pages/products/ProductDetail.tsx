@@ -1,3 +1,4 @@
+import AddToFavourate from "@/components/products/AddToFavourate";
 import ProductCard from "@/components/products/ProductCard";
 import Rating from "@/components/products/Rating";
 import { Button } from "@/components/ui/button";
@@ -68,6 +69,10 @@ function ProductDetail() {
           </p>
           <div className="flex items-center justify-between">
             <Rating rating={Number(product?.rating)}></Rating>
+            <AddToFavourate
+              productId={String(product?.id)}
+              rating={Number(product?.rating)}
+            ></AddToFavourate>
           </div>
         </div>
       </section>

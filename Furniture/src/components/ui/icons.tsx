@@ -2,6 +2,7 @@ import {
   ArrowLeftIcon,
   ExclamationTriangleIcon,
   HamburgerMenuIcon,
+  HeartIcon,
   HomeIcon,
   LayersIcon,
   PaperPlaneIcon,
@@ -36,4 +37,5 @@ export const Icons = {
   Layers: LayersIcon,
   Plus: PlusIcon,
   Star: StarIcon,
+  Heart: HeartIcon,
 };
