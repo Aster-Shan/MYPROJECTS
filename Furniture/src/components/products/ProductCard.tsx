@@ -8,18 +8,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import type { Product } from "@/types";
 import { Link } from "react-router-dom";
 import { Icons } from "../ui/icons";
 
-interface productProps {
+interface productProps extends React.HTMLAttributes<HTMLDivElement> {
   product: Product;
 }
 
-function ProductCard({ product }: productProps) {
+function ProductCard({ product, className }: productProps) {
   return (
-    <Card className="size-full overflow-hidden rounded-lg">
+    <Card className={cn("size-full overflow-hidden rounded-lg", className)}>
       <Link to={`/products/${product.id}`} aria-label={product.name}>
         <CardHeader className="border-b p-0">
           <AspectRatio ratio={1 / 1} className="bg-muted">
