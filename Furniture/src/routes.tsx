@@ -1,14 +1,17 @@
 import AboutPage from "@/pages/About";
-import BlogPage from "@/pages/blogs/Blog";
-import BlogDetailPage from "@/pages/blogs/BlogDetail";
-import BlogRootLayout from "@/pages/blogs/BlogRootLayout";
 import ErrorPage from "@/pages/Error";
 import HomePage from "@/pages/Home";
 import ProductPage from "@/pages/products/Product";
 import ProductDetailPage from "@/pages/products/ProductDetail";
 import ProductRootLayout from "@/pages/products/ProductRootLayout";
 import RootLayout from "@/pages/RootLayout";
+import { Suspense } from "react";
 import { createBrowserRouter } from "react-router";
+
+// eslint-disable-next-line react-refresh/only-export-components
+const SuspenseFallback = () => (
+  <div className="text-center py-10">Loading...</div>
+);
 
 export const router = createBrowserRouter([
   {
@@ -20,10 +23,46 @@ export const router = createBrowserRouter([
       { path: "about", Component: AboutPage },
       {
         path: "blogs",
-        Component: BlogRootLayout,
+        async lazy() {
+          const mod = await import("@/pages/blogs/BlogRootLayout");
+          const Component = mod.default;
+          return {
+            Component: () => (
+              <Suspense fallback={<SuspenseFallback />}>
+                <Component />
+              </Suspense>
+            ),
+          };
+        },
         children: [
-          { index: true, Component: BlogPage },
-          { path: ":postId", Component: BlogDetailPage },
+          {
+            index: true,
+            async lazy() {
+              const mod = await import("@/pages/blogs/Blog");
+              const Component = mod.default;
+              return {
+                Component: () => (
+                  <Suspense fallback={<SuspenseFallback />}>
+                    <Component />
+                  </Suspense>
+                ),
+              };
+            },
+          },
+          {
+            path: ":postId",
+            async lazy() {
+              const mod = await import("@/pages/blogs/BlogDetail");
+              const Component = mod.default;
+              return {
+                Component: () => (
+                  <Suspense fallback={<SuspenseFallback />}>
+                    <Component />
+                  </Suspense>
+                ),
+              };
+            },
+          },
         ],
       },
       {
