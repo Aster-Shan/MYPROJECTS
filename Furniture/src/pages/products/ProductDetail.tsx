@@ -74,6 +74,10 @@ function ProductDetail() {
               rating={Number(product?.rating)}
             ></AddToFavourate>
           </div>
+
+
+
+          
         </div>
       </section>
 
