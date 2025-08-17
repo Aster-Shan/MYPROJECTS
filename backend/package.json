@@ -1,23 +1,12 @@
 {
- 
   "scripts": {
- 
-   
-  "dev": "nodemon index.js"
- 
+    "dev": "nodemon index.js"
   },
- 
   "devDependencies": {
- 
-   
-  "nodemon": "^3.1.10"
- 
+    "nodemon": "^3.1.10"
   },
- 
   "dependencies": {
- 
-   
-  "capitalize": "^2.0.4"
- 
-  }
+    "capitalize": "^2.0.4"
+  },
+  "type": "module"
 }
