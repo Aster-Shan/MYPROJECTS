@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "For Furniture Project",
   "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
     "@types/bcrypt": "^6.0.0",
     "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
@@ -31,7 +32,7 @@
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
@@ -39,6 +40,7 @@
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-rate-limit": "^8.0.1",
     "express-validator": "^7.2.1",
@@ -47,5 +49,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
     "multer": "^2.0.2"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
