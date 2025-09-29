@@ -25,19 +25,6 @@ app.use(express.static('public'));
 app.use('/api/v1', healthRoutes);
 app.use('/api/v1', authRoutes);
 app.use(viewRoutes);
-// interface Customrequest extends Request {
-//   userId?: number;
-// }
-
-// app.get("/health", check, (req: Customrequest, res: Response) => {
-//   throw new Error("An error occured");
-//   res.status(200).json({
-//     message: "hello we are ready for response",
-//     userId: req.userId,
-//   });
-// });
-
-//app.use(errorController.notFound);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const status = error.status || 500;
