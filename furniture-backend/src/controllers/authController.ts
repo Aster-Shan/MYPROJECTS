@@ -15,6 +15,7 @@ import {
 import {
   checkOtpErrorIfSameDate,
   checkOtpRow,
+  checkUerIfNotExit,
   checkUserExist,
 } from '../utils/auth';
 import { generateToken } from '../utils/generate';
@@ -213,7 +214,7 @@ export const confirmPassword = [
     .matches(/^[0-9]+$/)
     .isLength({ min: 8, max: 8 }),
 
-  body('token', 'Invalid token').trim().notEmpty().escape(),
+  body('token', 'Invalid token').trim().notEmpty().isString(),
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
@@ -271,18 +272,19 @@ export const confirmPassword = [
     };
     const newUser = await createUser(userData);
 
+    //Access Token
     const accessTokenPayload = { id: newUser.id };
     const refreshTokenPayload = { id: newUser.id, phone: newUser.phone };
 
     const accessToken = jwt.sign(
       accessTokenPayload,
-      process.env.ACCESS_TOKEN_SECRECT!,
+      process.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: 60 * 15 },
     );
 
     const refreshToken = jwt.sign(
       refreshTokenPayload,
-      process.env.REFRESH_TOKEN_SECRECT!,
+      process.env.REFRESH_TOKEN_SECRET!,
       { expiresIn: '30d' },
     );
     const userUpdateData = {
@@ -290,19 +292,141 @@ export const confirmPassword = [
     };
     await updateUser(newUser.id, userUpdateData);
 
-    res.status(201).json({
-      message: 'Successfully created an account',
-      userId: newUser.id,
-      accessToken,
-      refreshToken,
-    });
+    res
+      .cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge: 15 * 1000,
+      })
+      .cookie('RefreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      .status(201)
+      .json({
+        message: 'Successfully created an account',
+        userId: newUser.id,
+      });
   },
 ];
 
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  res.status(200).json({ message: 'login' });
-};
+//login
+
+export const login = [
+  body('phone', 'Invalid Phone Number')
+    .trim()
+    .notEmpty()
+    .matches(/^[0-9]+$/)
+    .isLength({ min: 5, max: 12 }),
+
+  body('password', 'Password must be 8 digits')
+    .trim()
+    .notEmpty()
+    .matches(/^[0-9]+$/)
+    .isLength({ min: 8, max: 8 }),
+
+  async (req: Request, res: Response, next: NextFunction) => {
+    // ---------------- VALIDATION ----------------
+    const errors = validationResult(req).array({ onlyFirstError: true });
+    if (errors.length > 0) {
+      const error: any = new Error(errors[0].msg);
+      error.status = 400;
+      error.code = 'ERROR_Invalid';
+      return next(error);
+    }
+
+    const { phone, password } = req.body;
+
+    // ---------------- FIND USER ----------------
+    const user = await getUserByPhone(phone);
+    checkUerIfNotExit(user);
+
+    // ---------------- ACCOUNT FREEZE CHECK ----------------
+    if (user?.status === 'FREEEZE') {
+      const error: any = new Error('Your Account is temporarily freezed');
+      error.status = 401;
+      error.code = 'ERROR_Freeze';
+      return next(error);
+    }
+
+    // ---------------- PASSWORD MATCH CHECK ----------------
+    const isMatchPassword = await bcrypt.compare(password, user!.password);
+
+    // ======================================================
+    //  WRONG PASSWORD  (your original logic, only moved)
+    // ======================================================
+    if (!isMatchPassword) {
+      const lastRequest = new Date(user!.updatedAt).toLocaleDateString();
+      const isSameDate = lastRequest == new Date().toLocaleDateString();
+
+      if (!isSameDate) {
+        const userData = { errorLoginCount: 1 };
+        await updateUser(user!.id, userData);
+      } else {
+        if (user!.errorLoginCount >= 2) {
+          // freeze if 3 wrong
+          const userData = { status: 'FREEEZE' }; // ← fixed spelling
+          await updateUser(user!.id, userData);
+        } else {
+          const userData = { errorLoginCount: { increment: 1 } };
+          await updateUser(user!.id, userData);
+        }
+      }
+
+      const error: any = new Error('Password is wrong');
+      error.status = 401;
+      error.code = 'ERROR_Invalid';
+      return next(error);
+    }
+
+    // ======================================================
+    //  CORRECT PASSWORD (your original code unchanged, only moved)
+    // ======================================================
+
+    // Token Payloads
+    const accessTokenPayload = { id: user!.id };
+    const refreshTokenPayload = { id: user!.id, phone: user!.phone };
+
+    const accessToken = jwt.sign(
+      accessTokenPayload,
+      process.env.ACCESS_TOKEN_SECRET!,
+      { expiresIn: 60 * 15 },
+    );
+
+    const refreshToken = jwt.sign(
+      refreshTokenPayload,
+      process.env.ACCESS_TOKEN_SECRET!,
+      { expiresIn: '30d' },
+    );
+
+    // Update user (reset wrong count + save token)
+    const userData = {
+      errorLoginCount: 0,
+      randToken: refreshToken,
+    };
+
+    await updateUser(user!.id, userData);
+
+    res
+      .cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge: 15 * 1000,
+      })
+      .cookie('RefreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json({
+        message: 'Successfully login',
+        userId: user!.id,
+      });
+  },
+];
