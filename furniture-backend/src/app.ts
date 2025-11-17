@@ -1,14 +1,17 @@
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
 //import * as errorController from './controllers/web/errorController';
+import { auth } from './midlewares/auth';
 import { limiter } from './midlewares/rateLimiter';
+import userRoutes from './routes/v1/admin/user';
 import authRoutes from './routes/v1/auth';
-import healthRoutes from './routes/v1/health';
-import viewRoutes from './routes/v1/web/view';
+//import healthRoutes from './routes/v1/health';
+//import viewRoutes from './routes/v1/web/view';
 export const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
@@ -16,15 +19,17 @@ app.set('views', 'src/views');
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 app.use(helmet());
 app.use(compression());
 app.use(limiter);
 app.use(express.static('public'));
 
-app.use('/api/v1', healthRoutes);
+//app.use('/api/v1', healthRoutes);
 app.use('/api/v1', authRoutes);
-app.use(viewRoutes);
+app.use('/api/v1/admins', auth, userRoutes);
+//app.use(viewRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const status = error.status || 500;

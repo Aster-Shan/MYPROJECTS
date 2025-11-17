@@ -297,9 +297,9 @@ export const confirmPassword = [
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-        maxAge: 15 * 1000,
+        maxAge: 15 * 60 * 1000,
       })
-      .cookie('RefreshToken', refreshToken, {
+      .cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
@@ -415,9 +415,9 @@ export const login = [
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-        maxAge: 15 * 1000,
+        maxAge: 15 * 60 * 1000,
       })
-      .cookie('RefreshToken', refreshToken, {
+      .cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
