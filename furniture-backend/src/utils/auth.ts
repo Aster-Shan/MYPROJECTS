@@ -1,8 +1,9 @@
+import { errorCode } from '../../config/errorCode';
 export const checkUserExist = (user: any) => {
   if (user) {
     const error: any = new Error('Phone Number is already registered');
     error.status = 409;
-    error.code = 'Error_NotFound';
+    error.code = errorCode.userExist;
     throw error;
   }
 };
@@ -15,7 +16,7 @@ export const checkOtpErrorIfSameDate = (
       'OTP is wrong for 5 times.Please try again later',
     );
     error.status = 401;
-    error.code = 'Erorr_OTPMaximunRequest';
+    error.code = errorCode.overLimit;
     throw error;
   }
 };
@@ -23,7 +24,7 @@ export const checkOtpRow = (otpRow: any) => {
   if (!otpRow) {
     const error: any = new Error('Phone number is not correct');
     error.status = 400;
-    error.code = 'Invalid';
+    error.code = errorCode.invalid;
     throw error;
   }
 };
@@ -31,7 +32,7 @@ export const checkUerIfNotExit = (user: any) => {
   if (!user) {
     const error: any = new Error('This Phone Number is not registered');
     error.status = 401;
-    error.code = 'Unauthenticated';
+    error.code = errorCode.unauthenticated;
     throw error;
   }
 };

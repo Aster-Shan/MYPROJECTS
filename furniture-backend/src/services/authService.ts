@@ -6,7 +6,11 @@ export const getUserByPhone = async (phone: string) => {
     where: { phone: phone },
   });
 };
-
+export const getUserById = async (id: number) => {
+  return prisma.user.findUnique({
+    where: { id },
+  });
+};
 export const createOtp = async (otpData: any) => {
   return prisma.otp.create({
     data: otpData,
