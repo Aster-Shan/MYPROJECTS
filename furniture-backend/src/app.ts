@@ -10,6 +10,7 @@ import morgan from 'morgan';
 import path from 'path';
 //import * as errorController from './controllers/web/errorController';
 import { auth } from './midlewares/auth';
+import { authorise } from './midlewares/authorise';
 import { limiter } from './midlewares/rateLimiter';
 import adminRoutes from './routes/v1/admin/user';
 import profileRoutes from './routes/v1/api/user';
@@ -68,7 +69,7 @@ app.use(express.static('public'));
 
 //app.use('/api/v1', healthRoutes);
 app.use('/api/v1', authRoutes);
-app.use('/api/v1/admins', auth, adminRoutes);
+app.use('/api/v1/admins', auth, authorise(true, 'ADMIN'), adminRoutes);
 app.use('/api/v1', profileRoutes);
 //app.use(viewRoutes);
 

@@ -18,5 +18,8 @@ export const changeLanguage = [
       error.code = errorCode.invalid;
       return next(error);
     }
+    const { lng } = req.query;
+    res.cookie('i18next', lng);
+    res.status(200).json({ message: req.t('ChangeLan', { lang: lng }) });
   },
 ];
