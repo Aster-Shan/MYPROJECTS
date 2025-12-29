@@ -7,9 +7,12 @@ import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
 import middleware from 'i18next-http-middleware';
 import morgan from 'morgan';
+import cron from 'node-cron';
 import path from 'path';
 import { limiter } from './midlewares/rateLimiter';
 import routes from './routes/v1/';
+import { createOrUpdate, getSettingStatus } from './services/settingService';
+
 export const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
@@ -67,4 +70,14 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   const message = error.message || 'server error';
   const errorcode = error.code || 'Error_Code';
   res.status(status).json({ message, error: errorcode });
+});
+
+cron.schedule('* 5 * * *', async () => {
+  console.log('running a task every 5am for testing');
+  //not for heavy tasks
+  const setting = await getSettingStatus('maintenance');
+  if (setting?.value === 'true') {
+    await createOrUpdate('maintenance', 'false');
+    console.log('Now maintenance mode is off');
+  }
 });
