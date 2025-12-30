@@ -26,6 +26,8 @@ const fileFilter = (
 };
 const upload = multer({
   storage: filestorage,
+  fileFilter,
+  limits: { fileSize: 1024 * 1024 * 2 }, //if 10,file size is so big,user has to download more data so image optimixation is needed
 });
 
 export default upload;
