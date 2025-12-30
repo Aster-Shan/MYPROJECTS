@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { query, validationResult } from 'express-validator';
 import { unlink } from 'node:fs/promises';
 import path from 'path';
+import sharp from 'sharp';
 
 import { errorCode } from '../../../config/errorCode';
 import { getUserById, updateUser } from '../../services/authService';
@@ -57,6 +58,7 @@ export const testPermission = async (
   res.status(200).json({ info });
 };
 
+//upload sigle profile
 export const uploadProfile = async (
   req: CustomRequest,
   res: Response,
@@ -76,10 +78,11 @@ export const uploadProfile = async (
   if (user?.image) {
     try {
       const filePath = path.join(
+        //place to store image
         __dirname,
         '../../..',
         '/uploads/images',
-        user!.image!,
+        user!.image!, //original uploaded image to delete
       );
       await unlink(filePath);
     } catch (error) {
@@ -93,6 +96,85 @@ export const uploadProfile = async (
 
   res.status(200).json({
     message: 'Profile picture uploaded successfully.',
+    image: fileName,
+  });
+};
+export const getMyPhoto = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const file = path.join(
+    //place to store image
+    __dirname,
+    '../../..',
+    '/uploads/images',
+    '1767059257086-134864759-cinema-image (1).jpg',
+  );
+  res.sendFile(file, (err) => {
+    res.status(404).send('File not Found');
+  });
+};
+
+//upload multiple files
+export const uploadProfileMultiple = (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.userId;
+};
+export const uploadProfileOptimize = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.userId;
+  const image = req.file;
+  const user = await getUserById(userId!);
+  checkUerIfNotExit(user);
+  checkFileExit(image);
+  const fileName =
+    Date.now() + '-' + ` ${Math.round(Math.random() * 1e9)}.webp`;
+  try {
+    const optimizedImagePath = path.join(
+      __dirname,
+      '../../..',
+      '/uploads/images',
+      fileName,
+    );
+    await sharp(req.file?.buffer)
+      .resize(200, 200)
+      .webp({ quality: 50 })
+      .toFile(optimizedImagePath);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: 'Image Optimization falied',
+    });
+    return;
+  }
+  if (user?.image) {
+    try {
+      const filePath = path.join(
+        //place to store image
+        __dirname,
+        '../../..',
+        '/uploads/images',
+        user!.image!, //original image name
+      );
+      await unlink(filePath); //delete image
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const userData = {
+    //save new image
+    image: fileName,
+  };
+  await updateUser(user?.id!, userData);
+  res.status(200).json({
+    message: 'Image uploaded and Optimized successfully',
     image: fileName,
   });
 };

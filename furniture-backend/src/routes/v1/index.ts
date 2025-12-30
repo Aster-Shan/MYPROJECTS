@@ -9,11 +9,11 @@ import authRoutes from './auth';
 const router = express.Router();
 //app.use('/api/v1', healthRoutes);
 // router.use('/api/v1', authRoutes); //login,logout,forget pass etc...
-// router.use('/api/v1/user', userRoutes); //change-language
+// router.use('/api/v1/users', userRoutes); //change-language
 // router.use('/api/v1/admins', auth, authorise(true, 'ADMIN'), adminRoutes);
 //app.use(viewRoutes);
 
 router.use('/api/v1', maintenance, authRoutes); //login,logout,forget pass etc...
-router.use('/api/v1/user', maintenance, userRoutes); //change-language
+router.use('/api/v1/users', maintenance, userRoutes); //change-language
 router.use('/api/v1/admins', auth, authorise(true, 'ADMIN'), adminRoutes);
 export default router;

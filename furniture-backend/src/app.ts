@@ -62,7 +62,7 @@ i18next
 app.use(middleware.handle(i18next));
 
 app.use(express.static('public'));
-
+//app.use(express.static('uploads/images')); //to give public access of uploads images
 app.use(routes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
