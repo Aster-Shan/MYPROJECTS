@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { errorCode } from '../../../config/errorCode';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import { getUserById } from '../../services/authService';
+import { createOnePost, PostAgs } from '../../services/postService';
 import { checkUerIfNotExit } from '../../utils/auth';
 import { checkFileExit } from '../../utils/check';
 import { createError } from '../../utils/error';
@@ -59,7 +60,20 @@ export const createPost = [
       },
     );
 
-    res.status(200).json({ message: 'Sucessfully created Post' });
+    const data: PostAgs = {
+      title,
+      content,
+      body,
+      image: req.file!.filename,
+      authorId: user!.id,
+      category,
+      type,
+      tags,
+    };
+    const post = await createOnePost(data);
+    res
+      .status(201)
+      .json({ message: 'Sucessfully created new Post.', postId: post.id });
   },
 ];
 export const updatePost = [
