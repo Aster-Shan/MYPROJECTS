@@ -3,6 +3,7 @@ interface CustomRequest extends Request {
   user?: any;
 }
 export const getAllUsers = async (
+  //actually get just one current login user
   req: CustomRequest,
   res: Response,
   next: NextFunction,
