@@ -33,9 +33,9 @@ export const createOnePost = async (postData: PostAgs) => {
     type: {
       connectOrCreate: {
         where: { name: postData.type },
-      },
-      create: {
-        name: postData.type,
+        create: {
+          name: postData.type,
+        },
       },
     },
   };

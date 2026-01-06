@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import sanitizeHtml from 'sanitize-html';
 import { errorCode } from '../../../config/errorCode';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import { getUserById } from '../../services/authService';
@@ -15,7 +16,11 @@ interface CustomRequest extends Request {
 export const createPost = [
   body('title', 'tite is required').trim().notEmpty().escape(),
   body('content', 'content is required').trim().notEmpty().escape(),
-  body('body', 'body is required').trim().notEmpty().escape(),
+  body('body', 'body is required')
+    .trim()
+    .notEmpty()
+    .customSanitizer((value) => sanitizeHtml(value))
+    .notEmpty(),
   body('category', 'category is required').trim().notEmpty().escape(),
   body('type', 'type is required').trim().notEmpty().escape(),
   body('tags', 'Tag is invlid')
@@ -42,7 +47,7 @@ export const createPost = [
     checkFileExit(image);
 
     const splitFileName = req.file?.filename.split('.')[0];
-    const job = await ImageQueue.add(
+    await ImageQueue.add(
       'optimize_image',
       {
         filePath: req.file?.path,
