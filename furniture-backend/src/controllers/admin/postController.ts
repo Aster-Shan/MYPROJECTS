@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import { unlink } from 'node:fs/promises';
+import path from 'path';
 import sanitizeHtml from 'sanitize-html';
 import { errorCode } from '../../../config/errorCode';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import { getUserById } from '../../services/authService';
-import { createOnePost, PostAgs } from '../../services/postService';
-import { checkUerIfNotExit } from '../../utils/auth';
+import { createOnePost, PostArgs } from '../../services/postService';
 import { checkFileExit } from '../../utils/check';
 import { createError } from '../../utils/error';
 
@@ -13,6 +14,34 @@ interface CustomRequest extends Request {
   userId?: any;
 }
 
+const removeFiles = async (
+  originalFile: string,
+  optimizedFile: string | null,
+) => {
+  try {
+    const originalFilePath = path.join(
+      __dirname,
+      '../../..',
+      '/uploads/images',
+      originalFile,
+    );
+
+    await unlink(originalFilePath);
+
+    if (optimizedFile) {
+      const optimizedFilePath = path.join(
+        __dirname,
+        '../../..',
+        '/uploads/optimize',
+        optimizedFile,
+      );
+
+      await unlink(optimizedFilePath);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const createPost = [
   body('title', 'tite is required').trim().notEmpty().escape(),
   body('content', 'content is required').trim().notEmpty().escape(),
@@ -42,9 +71,21 @@ export const createPost = [
 
     const userId = req.userId;
     const image = req.file;
-    const user = await getUserById(userId!);
-    checkUerIfNotExit(user);
     checkFileExit(image);
+    const user = await getUserById(userId!);
+
+    if (!user) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError(
+          'This Phone Number is not registered',
+          401,
+          errorCode.unauthenticated,
+        ),
+      );
+    }
 
     const splitFileName = req.file?.filename.split('.')[0];
     await ImageQueue.add(
@@ -65,7 +106,7 @@ export const createPost = [
       },
     );
 
-    const data: PostAgs = {
+    const data: PostArgs = {
       title,
       content,
       body,

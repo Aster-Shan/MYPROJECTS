@@ -1,6 +1,6 @@
 import { PrismaClient } from '../../generated/prisma';
 const prisma = new PrismaClient();
-export type PostAgs = {
+export type PostArgs = {
   title: string;
   content: string;
   body: string;
@@ -10,7 +10,7 @@ export type PostAgs = {
   type: string;
   tags: string[]; //tag is optional
 };
-export const createOnePost = async (postData: PostAgs) => {
+export const createOnePost = async (postData: PostArgs) => {
   let data: any = {
     title: postData.title,
     content: postData.content,
