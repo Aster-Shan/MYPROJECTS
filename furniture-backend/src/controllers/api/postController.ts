@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { body, param, query, validationResult } from 'express-validator';
+import { param, query, validationResult } from 'express-validator';
 import { errorCode } from '../../../config/errorCode';
 import { getUserById } from '../../services/authService';
 import { getPostsList, getPostWithRelations } from '../../services/postService';
@@ -107,13 +107,58 @@ export const getPostsByPagination = [
   },
 ];
 export const getinfinitePostsByPagination = [
-  body(),
+  query('cursor', 'Cursor must be Post ID').isInt({ gt: 0 }).optional(),
+
+  query('Limit', 'Limit number must be unsigned integar.')
+    .isInt({ gt: 4 })
+    .optional(),
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
-    const { phone, password, token } = req.body;
-    res.status(200).json({ message: 'OK' });
+
+    const lastCursor = req.query.cursor;
+    const limit = req.query.limit || 5;
+
+    const userId = req.userId;
+    const user = await getUserById(userId!);
+    checkUserIfNotExit(user);
+
+    const options = {
+      take: +limit + 1,
+      skip: lastCursor ? 1 : 0,
+      cursor: lastCursor ? { id: +lastCursor } : undefined,
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        image: true,
+        updatedAt: true,
+        author: {
+          select: {
+            fullName: true,
+          },
+        },
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    };
+    const posts = await getPostsList(options);
+
+    const hasNextPage = posts.length > +limit; // limit is 5 but +1 so total 6
+
+    if (hasNextPage) {
+      posts.pop();
+    }
+    const newCursor = posts.length > 0 ? posts[posts.length - 1].id : null;
+
+    res.status(200).json({
+      message: 'Get all Infinite posts',
+      hasNextPage,
+      newCursor,
+      posts,
+    });
   },
 ];
