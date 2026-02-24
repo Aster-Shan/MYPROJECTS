@@ -22,28 +22,29 @@ export const getPost = [
     checkUserIfNotExit(user);
 
     const post = await getPostWithRelations(+postId);
-    const modifiedPost = {
-      id: post!.id,
-      title: post?.title,
-      content: post?.content,
-      body: post?.body,
-      image: '/optimize/' + post?.image.split('.')[0] + '.webp',
-      updatedAt: post?.updatedAt.toLocaleDateString('en-Us', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-      fullName:
-        (post?.author.firstName ?? '') + '' + (post?.author.lastName ?? ''),
-      category: post?.category.name,
-      type: post?.type.name,
-      tag:
-        post?.tags && post?.tags.length > 0
-          ? post.tags.map((i) => i.name)
-          : null,
-    };
 
-    res.status(200).json({ message: 'Successfully get post', modifiedPost });
+    // const modifiedPost = {
+    //   id: post!.id,
+    //   title: post?.title,
+    //   content: post?.content,
+    //   body: post?.body,
+    //   image: '/optimize/' + post?.image.split('.')[0] + '.webp',
+    //   updatedAt: post?.updatedAt.toLocaleDateString('en-Us', {
+    //     year: 'numeric',
+    //     month: 'long',
+    //     day: 'numeric',
+    //   }),
+    //   fullName:
+    //     (post?.author.firstName ?? '') + '' + (post?.author.lastName ?? ''),
+    //   category: post?.category.name,
+    //   type: post?.type.name,
+    //   tag:
+    //     post?.tags && post?.tags.length > 0
+    //       ? post.tags.map((i) => i.name)
+    //       : null,
+    // };
+
+    res.status(200).json({ message: 'Successfully get post', post });
   },
 ];
 export const getPostsByPagination = [

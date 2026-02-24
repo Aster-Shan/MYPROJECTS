@@ -1,5 +1,4 @@
-import { PrismaClient } from '../../generated/prisma';
-const prisma = new PrismaClient();
+import { prisma } from './prismaClient';
 export type PostArgs = {
   title: string;
   content: string;
@@ -80,6 +79,7 @@ export const getPostWithRelations = async (id: number) => {
         select: {
           firstName: true,
           lastName: true,
+          fullName: true,
         },
       },
       category: {
