@@ -100,3 +100,6 @@ export const getPostWithRelations = async (id: number) => {
     },
   });
 };
+export const getPostsList = async (options: any) => {
+  return prisma.post.findMany(options);
+};

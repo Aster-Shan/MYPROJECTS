@@ -1,9 +1,16 @@
 import { Request } from 'express';
+import fs from 'fs';
 import multer, { FileFilterCallback } from 'multer';
+import path from 'path';
+
+const uploadDir = path.join(__dirname, '..', 'uploads', 'images');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const filestorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/images');
+    cb(null, path.join(__dirname, '..', '..', 'uploads', 'images')); //important ==> use an absolute path & ensure the directory exists
   },
   filename: function (req, file, cb) {
     const ext = file.mimetype.split('/')[1];

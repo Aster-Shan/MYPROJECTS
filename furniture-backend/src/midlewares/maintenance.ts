@@ -8,23 +8,26 @@ export const maintenance = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const ip: any = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  if (whiteLists.includes(ip)) {
-    console.log(`Allowed IP:${ip}`);
-    next();
-  } else {
-    console.log(`Not Allowed IP: ${ip}`);
-    const setting = await getSettingStatus('maintenance');
-    if (setting?.value === 'true') {
-      return next(
-        createError(
-          'The server is under maintenance.Please try again later',
-          503,
-          errorCode.maintenance,
-        ),
-      );
+  try {
+    const ip: any = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    if (whiteLists.includes(ip)) {
+      console.log(`Allowed IP:${ip}`);
+      return next();
+    } else {
+      console.log(`Not Allowed IP: ${ip}`);
+      const setting = await getSettingStatus('maintenance');
+      if (setting?.value === 'true') {
+        return next(
+          createError(
+            'The server is under maintenance.Please try again later',
+            503,
+            errorCode.maintenance,
+          ),
+        );
+      }
     }
-
-    next();
+    return next();
+  } catch (error) {
+    return next(error);
   }
 };

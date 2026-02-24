@@ -104,10 +104,17 @@ export const getMyPhoto = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const file = path.join(__dirname, '../../..', '/uploads/images');
+  const file = path.join(
+    __dirname,
+    '../../..',
+    'uploads/images',
+    // assuming you have the filename saved in DB
+  );
 
   res.sendFile(file, (err) => {
-    res.status(404).send('File not found');
+    if (err) {
+      res.status(404).send('File not found');
+    }
   });
 };
 
