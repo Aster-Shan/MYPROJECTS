@@ -1,13 +1,8 @@
 import { Worker } from 'bullmq';
-import { Redis } from 'ioredis';
 import path from 'path';
 import sharp from 'sharp';
-const connection = new Redis({
-  host: process.env.REDIS_HOST,
-  port: 6379,
-  //password
-  maxRetriesPerRequest: null,
-});
+import { redis } from '../../../config/redisClient';
+
 //create a wroker to process image optimization job
 const ImageWroker = new Worker(
   'imageQueue',
@@ -24,7 +19,7 @@ const ImageWroker = new Worker(
       .webp({ quality: quality })
       .toFile(optimizedImagePath);
   },
-  { connection },
+  { connection: redis },
 );
 ImageWroker.on('completed', (job) => {
   console.log(`job completed with result ${job.id}`);
