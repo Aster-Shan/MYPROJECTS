@@ -17,8 +17,8 @@ import {
 import {
   checkOtpErrorIfSameDate,
   checkOtpRow,
-  checkUerIfNotExit,
   checkUserExist,
+  checkUserIfNotExit,
 } from '../utils/auth';
 import { generateToken } from '../utils/generate';
 export const register = [
@@ -344,7 +344,7 @@ export const login = [
 
     // ---------------- FIND USER ----------------
     const user = await getUserByPhone(phone);
-    checkUerIfNotExit(user);
+    checkUserIfNotExit(user);
 
     // ---------------- ACCOUNT FREEZE CHECK ----------------
     if (user?.status === 'FREEEZE') {
@@ -461,7 +461,7 @@ export const logout = async (
     return next(err);
   }
   const user = await getUserById(decoded.id);
-  checkUerIfNotExit(user);
+  checkUserIfNotExit(user);
 
   if (user!.phone !== decoded.phone) {
     const error: any = new Error('You are not an authenticated user!');
@@ -507,7 +507,7 @@ export const forgetPassword = [
     }
 
     const user = await getUserByPhone(phone);
-    checkUerIfNotExit(user);
+    checkUserIfNotExit(user);
 
     // OTP sending logic here
     // Generate OTP & call OTP sending API
@@ -590,7 +590,7 @@ export const verifyOtpForPassword = [
     const { phone, otp, token } = req.body;
 
     const user = await getUserByPhone(phone);
-    checkUerIfNotExit(user);
+    checkUserIfNotExit(user);
 
     const otpRow = await getOTPbyPhone(phone);
 
@@ -687,7 +687,7 @@ export const resetPassword = [
     const { token, phone, password } = req.body;
 
     const user = await getUserByPhone(phone);
-    checkUerIfNotExit(user);
+    checkUserIfNotExit(user);
 
     const otpRow = await getOTPbyPhone(phone);
 
@@ -782,7 +782,7 @@ export const authCheck = async (
 ) => {
   const userId = req.userId;
   const user = await getUserById(userId!);
-  checkUerIfNotExit(user);
+  checkUserIfNotExit(user);
 
   res.status(200).json({
     message: 'You are authenticated.',

@@ -28,7 +28,7 @@ export const checkOtpRow = (otpRow: any) => {
     throw error;
   }
 };
-export const checkUerIfNotExit = (user: any) => {
+export const checkUserIfNotExit = (user: any) => {
   if (!user) {
     const error: any = new Error('This Phone Number is not registered');
     error.status = 401;

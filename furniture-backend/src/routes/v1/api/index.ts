@@ -3,6 +3,7 @@ import express from 'express';
 import {
   getPost,
   getPostsByPagination,
+  getinfinitePostsByPagination,
 } from '../../../controllers/api/postController';
 import {
   changeLanguage,
@@ -34,6 +35,7 @@ router.patch(
 
 router.get('/profile/my-photo', getMyPhoto); //just testing
 router.get('/posts', auth, getPostsByPagination);
+router.get('/posts/infinite', auth, getinfinitePostsByPagination);
 router.get('/posts/:id', auth, getPost);
 
 export default router;

@@ -6,7 +6,7 @@ import path from 'path';
 import { errorCode } from '../../../config/errorCode';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import { getUserById, updateUser } from '../../services/authService';
-import { checkUerIfNotExit } from '../../utils/auth';
+import { checkUserIfNotExit } from '../../utils/auth';
 import { authorise } from '../../utils/authorise';
 import { checkFileExit } from '../../utils/check';
 interface CustomRequest extends Request {
@@ -42,7 +42,7 @@ export const testPermission = async (
 ) => {
   const userId = req.userId;
   const user = await getUserById(userId!);
-  checkUerIfNotExit(user);
+  checkUserIfNotExit(user);
 
   const info: any = {
     title: 'Testing Permission',
@@ -65,7 +65,7 @@ export const uploadProfile = async (
   const userId = req.userId;
   const image = req.file;
   const user = await getUserById(userId!);
-  checkUerIfNotExit(user);
+  checkUserIfNotExit(user);
   checkFileExit(image);
 
   // console.log("Image -----", image);
@@ -131,7 +131,7 @@ export const uploadProfileOptimize = async (
   const userId = req.userId;
   const image = req.file;
   const user = await getUserById(userId!);
-  checkUerIfNotExit(user);
+  checkUserIfNotExit(user);
   checkFileExit(image);
 
   const splitFileName = req.file?.filename.split('.')[0];

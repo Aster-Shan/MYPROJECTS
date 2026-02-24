@@ -6,12 +6,18 @@ import sanitizeHtml from 'sanitize-html';
 import { errorCode } from '../../../config/errorCode';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import { getUserById } from '../../services/authService';
-import { createOnePost, PostArgs } from '../../services/postService';
-import { checkFileExit } from '../../utils/check';
+import {
+  createOnePost,
+  deleteOnePost,
+  getPostById,
+  PostArgs,
+} from '../../services/postService';
+import { checkFileExit, checkModelIfExist } from '../../utils/check';
 import { createError } from '../../utils/error';
 
 interface CustomRequest extends Request {
-  userId?: any;
+  userId?: number;
+  user?: any;
 }
 
 const removeFiles = async (
@@ -65,15 +71,16 @@ export const createPost = [
     const errors = validationResult(req).array({ onlyFirstError: true });
 
     if (errors.length > 0) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
     const { title, content, body, category, type, tags } = req.body;
-
     const userId = req.userId;
-    const image = req.file;
-    checkFileExit(image);
-    const user = await getUserById(userId!);
+    checkFileExit(req.file);
 
+    const user = await getUserById(userId!);
     if (!user) {
       if (req.file) {
         await removeFiles(req.file.filename, null);
@@ -81,7 +88,7 @@ export const createPost = [
       return next(
         createError(
           'This Phone Number is not registered',
-          401,
+          409,
           errorCode.unauthenticated,
         ),
       );
@@ -123,24 +130,117 @@ export const createPost = [
   },
 ];
 export const updatePost = [
-  body(),
+  body('postId', 'id is required').trim().notEmpty().isInt({ min: 1 }),
+  body('title', 'tite is required').trim().notEmpty().escape(),
+  body('content', 'content is required').trim().notEmpty().escape(),
+  body('body', 'body is required')
+    .trim()
+    .notEmpty()
+    .customSanitizer((value) => sanitizeHtml(value))
+    .notEmpty(),
+  body('category', 'category is required').trim().notEmpty().escape(),
+  body('type', 'type is required').trim().notEmpty().escape(),
+  body('tags', 'Tag is invlid')
+    .optional({ nullable: true })
+    .customSanitizer((value) => {
+      if (value) {
+        return value.split(',').filter((tag: string) => tag.trim() !== ''); //"",tag8 ==> two tags = "" and tag8 => we dont use "", "" means "space but trim"
+      }
+      return value;
+    }),
+
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
-    const { phone, password, token } = req.body;
+    const { postId, title, content, body, category, type, tags } = req.body;
+    const userId = req.userId;
+    //checkFileExit(req.file);
+
+    const user = await getUserById(userId!);
+    if (!user) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError(
+          'This Phone Number is not registered',
+          409,
+          errorCode.unauthenticated,
+        ),
+      );
+    }
+    //admin
+
+    const post = await getPostById(+postId); // post id from user is string "8".so need to change to number
+    if (!post) {
+      if (req.file) {
+        await removeFiles(req.file.filename, null);
+      }
+      return next(
+        createError('This data is not existed', 401, errorCode.invalid),
+      );
+    }
+
     res.status(200).json({ message: 'Successfully updated' });
   },
 ];
 export const deletePost = [
-  body(),
+  body('postId', 'Post Id is required.').isInt({ gt: 0 }),
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
+    // If validation error occurs
     if (errors.length > 0) {
       return next(createError(errors[0].msg, 400, errorCode.invalid));
     }
-    const { phone, password, token } = req.body;
-    res.status(200).json({ message: 'Successfully deleted' });
+
+    const { postId } = req.body;
+
+    const userId = req.userId;
+    const user = await getUserById(userId!);
+    checkUserIfNotExist(user);
+
+    const post = await getPostById(+postId);
+    checkModelIfExist(post);
+
+    if (user!.id !== post!.authorId) {
+      return next(
+        createError('This action is not allowed.', 403, errorCode.unauthorised),
+      );
+    }
+
+    const postDeleted = await deleteOnePost(post!.id);
+    const optimizedFile = post!.image.split('.')[0] + '.webp';
+    await removeFiles(post!.image, optimizedFile);
+
+    res.status(200).json({
+      message: 'Successfully deleted the post.',
+      postId: postDeleted.id,
+    });
   },
 ];
+
+function checkUserIfNotExist(
+  user: {
+    status: import('../../../generated/prisma').$Enums.Status;
+    id: number;
+    firstName: string | null;
+    lastName: string | null;
+    phone: string;
+    password: string;
+    email: string | null;
+    role: import('../../../generated/prisma').$Enums.Role;
+    lastLogin: Date | null;
+    errorLoginCount: number;
+    randToken: string;
+    image: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  } | null,
+) {
+  throw new Error('Function not implemented.');
+}

@@ -54,3 +54,49 @@ export const createOnePost = async (postData: PostArgs) => {
     data,
   });
 };
+
+export const getPostById = async (id: number) => {
+  return prisma.post.findUnique({
+    where: { id },
+  });
+};
+export const deleteOnePost = async (id: number) => {
+  return prisma.post.delete({
+    where: { id },
+  });
+};
+export const getPostWithRelations = async (id: number) => {
+  return prisma.post.findUnique({
+    where: { id },
+    //omit: { createdAt: true },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      body: true,
+      image: true,
+      updatedAt: true,
+      author: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      type: {
+        select: {
+          name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+};
