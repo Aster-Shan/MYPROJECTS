@@ -4,6 +4,7 @@ import { errorCode } from '../../../config/errorCode';
 import { getUserById } from '../../services/authService';
 import { getPostsList, getPostWithRelations } from '../../services/postService';
 import { checkUserIfNotExit } from '../../utils/auth';
+import { getOrSetCache } from '../../utils/cache';
 import { createError } from '../../utils/error';
 
 interface CustomRequest extends Request {
@@ -21,7 +22,11 @@ export const getPost = [
     const user = await getUserById(userId!);
     checkUserIfNotExit(user);
 
-    const post = await getPostWithRelations(+postId);
+    const cacheKey = `posts:${JSON.stringify(postId)}`;
+    const post = await getOrSetCache(cacheKey, async () => {
+      return await getPostWithRelations(+postId);
+    });
+    // const post = await getPostWithRelations(+postId);
 
     // const modifiedPost = {
     //   id: post!.id,
@@ -88,7 +93,13 @@ export const getPostsByPagination = [
         updatedAt: 'desc',
       },
     };
-    const posts = await getPostsList(options);
+
+    // const posts = await getPostsList(options);
+    const cacheKey = `posts:${JSON.stringify(req.query)}`;
+    const posts = await getOrSetCache(cacheKey, async () => {
+      return getPostsList(options);
+    });
+
     const hasNextPage = posts.length > +limit;
     let nextPage = null;
     const previousPage = +page !== 1 ? +page - 1 : null;
@@ -145,7 +156,11 @@ export const getinfinitePostsByPagination = [
         id: 'asc',
       },
     };
-    const posts = await getPostsList(options);
+    // const posts = await getPostsList(options);
+    const cahceKey = `posts:${JSON.stringify(req.query)}`;
+    const posts = await getOrSetCache(cahceKey, async () => {
+      return await getPostsList(options);
+    });
 
     const hasNextPage = posts.length > +limit; // limit is 5 but +1 so total 6
 
