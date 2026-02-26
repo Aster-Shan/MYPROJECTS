@@ -4,6 +4,7 @@ import { unlink } from 'node:fs/promises';
 import path from 'path';
 import sanitizeHtml from 'sanitize-html';
 import { errorCode } from '../../../config/errorCode';
+import cacheQueue from '../../jobs/queues/cacheQueue';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import { getUserById } from '../../services/authService';
 import {
@@ -124,6 +125,18 @@ export const createPost = [
       tags,
     };
     const post = await createOnePost(data);
+    //add queue to delete cacahe after creating a post
+    await cacheQueue.add(
+      'invalidate-post-cache',
+      {
+        //pattern means which parts to be deleted
+        pattern: 'posts:*',
+      },
+      {
+        jobId: `invalidate-${Date.now()}`,
+        priority: 1,
+      },
+    );
     res
       .status(201)
       .json({ message: 'Sucessfully created new Post.', postId: post.id });
@@ -162,21 +175,33 @@ export const updatePost = [
     //checkFileExit(req.file);
 
     const user = await getUserById(userId!);
-    if (!user) {
-      if (req.file) {
-        await removeFiles(req.file.filename, null);
-      }
-      return next(
-        createError(
-          'This Phone Number is not registered',
-          409,
-          errorCode.unauthenticated,
-        ),
-      );
-    }
+    // if (!user) {
+    //   if (req.file) {
+    //     await removeFiles(req.file.filename, null);
+    //   }
+    //   return next(
+    //     createError(
+    //       'This Phone Number is not registered',
+    //       409,
+    //       errorCode.unauthenticated,
+    //     ),
+    //   );
+    // }
     //admin
 
     const post = await getPostById(+postId); // post id from user is string "8".so need to change to number
+
+    await cacheQueue.add(
+      'invalidate-post-cache',
+      {
+        //pattern means which parts to be deleted
+        pattern: 'posts:*',
+      },
+      {
+        jobId: `invalidate-${Date.now()}`,
+        priority: 1,
+      },
+    );
     if (!post) {
       if (req.file) {
         await removeFiles(req.file.filename, null);
@@ -216,6 +241,17 @@ export const deletePost = [
     const postDeleted = await deleteOnePost(post!.id);
     const optimizedFile = post!.image.split('.')[0] + '.webp';
     await removeFiles(post!.image, optimizedFile);
+    await cacheQueue.add(
+      'invalidate-post-cache',
+      {
+        //pattern means which parts to be deleted
+        pattern: 'posts:*',
+      },
+      {
+        jobId: `invalidate-${Date.now()}`,
+        priority: 1,
+      },
+    );
 
     res.status(200).json({
       message: 'Successfully deleted the post.',

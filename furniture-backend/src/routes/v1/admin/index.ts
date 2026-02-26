@@ -13,6 +13,6 @@ const router = express.Router();
 router.get('/user', getAllUsers);
 router.post('/maintenance', setMaintenace);
 router.post('/posts', upload.single('image'), createPost);
-router.patch('/posts', upload.single('image'), updatePost);
-router.delete('/posts', deletePost);
+router.patch('/posts', upload.single('image'), updatePost); //patch
+router.delete('/posts', deletePost); //delete
 export default router;
