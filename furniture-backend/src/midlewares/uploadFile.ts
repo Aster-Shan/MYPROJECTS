@@ -27,6 +27,7 @@ const fileFilter = (
   if (
     file.mimetype === 'image/png' ||
     file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/webp' ||
     file.mimetype === 'image/jpeg'
   ) {
     cb(null, true);

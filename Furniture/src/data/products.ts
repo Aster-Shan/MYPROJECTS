@@ -56,7 +56,7 @@ export const products = [
       "Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quam ut purus rutrum lobortis",
     images: [p3, p1, p6],
     categoryId: "uuid1",
-    price: 90,
+    price: 190,
     discount: 110,
     rating: 4,
     inventory: 90,

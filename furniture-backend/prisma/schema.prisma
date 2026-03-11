@@ -49,9 +49,9 @@ model Type {
 model Post {
   id         Int       @id @default(autoincrement())
   title      String    @db.VarChar(255)
-  content    String
-  body       String
-  image      String
+  content    String    @db.Text
+  body       String    @db.Text
+  image      String    @db.Text
   authorId   Int
   author     User      @relation(fields: [authorId], references: [id])
   categoryId Int

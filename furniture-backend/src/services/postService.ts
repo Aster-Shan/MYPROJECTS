@@ -10,6 +10,20 @@ export type PostArgs = {
   tags: string[]; //tag is optional
 };
 export const createOnePost = async (postData: PostArgs) => {
+  // Debug: Check field lengths
+  console.log('[v0] Field lengths:');
+  console.log('[v0] title length:', postData.title?.length);
+  console.log('[v0] content length:', postData.content?.length);
+  console.log('[v0] body length:', postData.body?.length);
+  console.log('[v0] image length:', postData.image?.length);
+  console.log('[v0] category length:', postData.category?.length);
+  console.log('[v0] type length:', postData.type?.length);
+  console.log('[v0] tags:', postData.tags);
+  if (postData.tags) {
+    postData.tags.forEach((tag, i) => {
+      console.log(`[v0] tag[${i}] length:`, tag?.length);
+    });
+  }
   let data: any = {
     title: postData.title,
     content: postData.content,
