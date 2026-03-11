@@ -115,3 +115,9 @@ export const updateOneProduct = async (productId: number, data: any) => {
 // 1. Delete all existing images for this product (deleteMany)
 // 2. Create new image records using uploaded files (create)
 // This replaces old images instead of appending new ones.
+
+export const deleteProductById = async (id: number) => {
+  return prisma.product.delete({
+    where: { id },
+  });
+};

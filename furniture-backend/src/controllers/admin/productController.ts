@@ -7,10 +7,11 @@ import cacheQueue from '../../jobs/queues/cacheQueue';
 import ImageQueue from '../../jobs/queues/imageQueue';
 import {
   createOneProduct,
+  deleteProductById,
   getProductById,
   updateOneProduct,
 } from '../../services/productService';
-import { checkFileExit } from '../../utils/check';
+import { checkFileExit, checkModelIfExist } from '../../utils/check';
 import { createError } from '../../utils/error';
 interface CustomRequest extends Request {
   userId?: number;
@@ -276,8 +277,48 @@ export const updateProduct = [
   },
 ];
 
-export const deleteProduct = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {};
+export const deleteProduct = [
+  body('productId', 'productId is required').isInt(),
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const errors = validationResult(req).array({ onlyFirstError: true });
+    // If validation error occurs
+    if (errors.length > 0) {
+      return next(createError(errors[0].msg, 400, errorCode.invalid));
+    }
+
+    const { productId } = req.body;
+
+    // const userId = req.userId;
+    // const user = await getUserById(userId!);
+    // checkUserIfNotExist(user);
+
+    const user = req.user;
+    const product = await getProductById(+productId);
+    checkModelIfExist(product);
+
+    const productDeleted = await deleteProductById(product!.id);
+    //prepare Deleting Old images
+    const orgFiles = product!.images.map((img) => img.path);
+    const optFiles = product!.images.map(
+      (img) => img.path.split('.')[0] + '.webp',
+    );
+    await removeFiles(orgFiles, optFiles);
+
+    await cacheQueue.add(
+      'invalidate-post-cache',
+      {
+        //pattern means which parts to be deleted
+        pattern: 'posts:*',
+      },
+      {
+        jobId: `invalidate-${Date.now()}`,
+        priority: 1,
+      },
+    );
+
+    res.status(200).json({
+      message: 'Successfully deleted the post.',
+      postId: productDeleted.id,
+    });
+  },
+];
