@@ -5,6 +5,7 @@ import { getUserById } from '../../services/authService';
 import { getPostsList, getPostWithRelations } from '../../services/postService';
 import { checkUserIfNotExit } from '../../utils/auth';
 import { getOrSetCache } from '../../utils/cache';
+import { checkModelIfExist } from '../../utils/check';
 import { createError } from '../../utils/error';
 
 interface CustomRequest extends Request {
@@ -26,6 +27,7 @@ export const getPost = [
     const post = await getOrSetCache(cacheKey, async () => {
       return await getPostWithRelations(+postId);
     });
+    checkModelIfExist(post);
     // const post = await getPostWithRelations(+postId);
 
     // const modifiedPost = {

@@ -6,6 +6,10 @@ import {
   getinfinitePostsByPagination,
 } from '../../../controllers/api/postController';
 import {
+  getProduct,
+  getProductsByPagination,
+} from '../../../controllers/api/productController';
+import {
   changeLanguage,
   getMyPhoto,
   uploadProfile,
@@ -34,8 +38,13 @@ router.patch(
 );
 
 router.get('/profile/my-photo', getMyPhoto); //just testing
+
+router.get('/posts/:id', auth, getPost);
 router.get('/posts', auth, getPostsByPagination); //offsetPagination
 router.get('/posts/infinite', auth, getinfinitePostsByPagination); //cursor pagination
-router.get('/posts/:id', auth, getPost);
+
+router.get('/products/:id', auth, getProduct);
+router.get('/products', auth, getProductsByPagination); //offsetPagination
+// router.get('/posts/infinite', auth, getinfinitePostsByPagination); //cursor pagination
 
 export default router;

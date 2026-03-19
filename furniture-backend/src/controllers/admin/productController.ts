@@ -261,7 +261,7 @@ export const updateProduct = [
       'invalidate-product-cache',
       {
         //pattern means which parts to be deleted
-        pattern: 'product:*',
+        pattern: 'products:*',
       },
       {
         jobId: `invalidate-${Date.now()}`,
@@ -305,10 +305,10 @@ export const deleteProduct = [
     await removeFiles(orgFiles, optFiles);
 
     await cacheQueue.add(
-      'invalidate-post-cache',
+      'invalidate-product-cache',
       {
         //pattern means which parts to be deleted
-        pattern: 'posts:*',
+        pattern: 'products:*',
       },
       {
         jobId: `invalidate-${Date.now()}`,

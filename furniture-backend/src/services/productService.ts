@@ -121,3 +121,47 @@ export const deleteProductById = async (id: number) => {
     where: { id },
   });
 };
+export const getProductWithRelations = async (id: number) => {
+  return prisma.product.findUnique({
+    where: { id },
+    omit: { categoryId: true, typeId: true, createdAt: true, updatedAt: true },
+    include: {
+      images: {
+        select: {
+          id: true,
+          path: true,
+        },
+      },
+    },
+    // select: {
+    //   id: true,
+    //   title: true,
+    //   content: true,
+    //   body: true,
+    //   image: true,
+    //   updatedAt: true,
+    //   author: {
+    //     select: {
+    //       firstName: true,
+    //       lastName: true,
+    //       // fullName: true,
+    //     },
+    //   },
+    //   category: {
+    //     select: {
+    //       name: true,
+    //     },
+    //   },
+    //   type: {
+    //     select: {
+    //       name: true,
+    //     },
+    //   },
+    //   tags: {
+    //     select: {
+    //       name: true,
+    //     },
+    //   },
+    // },
+  });
+};
