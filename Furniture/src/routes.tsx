@@ -7,7 +7,8 @@ import ProductRootLayout from "@/pages/products/ProductRootLayout";
 import RootLayout from "@/pages/RootLayout";
 import { Suspense } from "react";
 import { createBrowserRouter } from "react-router";
-
+import LoginPage from "./pages/auth/Login";
+import RegisterPage from "./pages/auth/Register";
 // eslint-disable-next-line react-refresh/only-export-components
 const SuspenseFallback = () => (
   <div className="text-center py-10">Loading...</div>
@@ -74,5 +75,13 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "/login",
+    Component: LoginPage,
+  },
+  {
+    path: "/register",
+    Component: RegisterPage,
   },
 ]);
