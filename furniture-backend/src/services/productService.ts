@@ -1,7 +1,4 @@
-import { PrismaClient } from '../../generated/prisma';
-
-const prisma = new PrismaClient();
-
+import { prisma } from './prismaClient';
 export const createOneProduct = async (data: any) => {
   const productdata: any = {
     name: data.name,
@@ -164,4 +161,7 @@ export const getProductWithRelations = async (id: number) => {
     //   },
     // },
   });
+};
+export const getProductsList = async (options: any) => {
+  return prisma.product.findMany(options);
 };

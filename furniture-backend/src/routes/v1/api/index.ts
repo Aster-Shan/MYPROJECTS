@@ -44,7 +44,7 @@ router.get('/posts', auth, getPostsByPagination); //offsetPagination
 router.get('/posts/infinite', auth, getinfinitePostsByPagination); //cursor pagination
 
 router.get('/products/:id', auth, getProduct);
-router.get('/products', auth, getProductsByPagination); //offsetPagination
-// router.get('/posts/infinite', auth, getinfinitePostsByPagination); //cursor pagination
+// router.get('/products', auth, getProductsByPagination); //offsetPagination
+router.get('/products', auth, getProductsByPagination); //cursor pagination
 
 export default router;
