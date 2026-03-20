@@ -3,19 +3,24 @@ export interface NavItem {
   href?: string;
   description?: string;
 }
+
 export interface NavItemWithChildren extends NavItem {
-  //title: string;(for title 'products')no need to declare coz already included
-  card: NavItemWithChildren[];
-  menu: NavItemWithChildren[];
+  card?: NavItemWithChildren[];
+  menu?: NavItemWithChildren[];
 }
 
 export type MainNavItem = NavItemWithChildren;
 
+export type Image = {
+  id: number;
+  path: string;
+};
+
 export type Product = {
-  id: string;
+  id: number;
   name: string;
   description: string;
-  images: string[];
+  images: Image[];
   categoryId: string;
   price: number;
   discount: number;
@@ -23,17 +28,49 @@ export type Product = {
   inventory: number;
   status: string;
 };
+
+export type Tag = {
+  name: string;
+};
+
 export type Post = {
-  id: string;
-  author: string;
+  id: number;
+  author: {
+    fullName: string;
+  };
   title: string;
   content: string;
   image: string;
   body: string;
-  updated_at: string;
-  tags: string[];
+  updatedAt: string;
+  tags: Tag[];
 };
-export type category = {
+
+export type Category = {
+  id: number;
+  name: string;
+};
+
+export type User = {
   id: string;
-  label: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  imageUrl: string;
+};
+
+export type Cart = {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  // image: {
+  //   id: string;
+  //   name: string;
+  //   url: string;
+  // };
+  // category: string;
+  // subcategory: string;
 };
