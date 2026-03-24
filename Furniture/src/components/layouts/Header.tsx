@@ -1,5 +1,9 @@
 import { siteConfig } from "@/config/site";
+// import { cartItems } from "@/data/carts";
+import { User } from "@/data/user";
 import { ModeToggle } from "../mode-toggle";
+import AuthDropDown from "./AuthDropDown";
+import CartSheet from "./CartSheet";
 import MainNavigation from "./MainNavigation";
 import MobileNavigation from "./MobileNavigation";
 
@@ -10,7 +14,10 @@ function Header() {
         <MainNavigation items={siteConfig.mainNav} />
         <MobileNavigation items={siteConfig.mainNav}></MobileNavigation>
         <div className="flex flex-1 items-center justify-end space-x-4 mr-8 lg:mr-0">
+          {/* <CartSheet cart={cartItems} /> */}
+          <CartSheet></CartSheet>
           <ModeToggle></ModeToggle>
+          <AuthDropDown user={User} />
         </div>
       </nav>
     </header>
