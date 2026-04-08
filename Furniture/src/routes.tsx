@@ -1,4 +1,7 @@
 import AboutPage from "@/pages/About";
+import BlogPage from "@/pages/blogs/Blog";
+import BlogDetailPages from "@/pages/blogs/BlogDetail";
+import BlogRootLayout from "@/pages/blogs/BlogRootLayout";
 import ErrorPage from "@/pages/Error";
 import HomePage from "@/pages/Home";
 import ProductPage from "@/pages/products/Product";
@@ -10,9 +13,12 @@ import { createBrowserRouter } from "react-router";
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
 // eslint-disable-next-line react-refresh/only-export-components
-const SuspenseFallback = () => (
-  <div className="text-center py-10">Loading...</div>
-);
+
+// const SuspenseFallback = () => (
+//   <div className="text-center py-10">Loading...</div>
+// );
+
+import { homeLoader } from "./router/loader";
 
 export const router = createBrowserRouter([
   {
@@ -20,49 +26,37 @@ export const router = createBrowserRouter([
     Component: RootLayout,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, Component: HomePage },
+      { index: true, element: <HomePage />, loader: homeLoader },
       { path: "about", Component: AboutPage },
       {
         path: "blogs",
-        async lazy() {
-          const mod = await import("@/pages/blogs/BlogRootLayout");
-          const Component = mod.default;
-          return {
-            Component: () => (
-              <Suspense fallback={<SuspenseFallback />}>
-                <Component />
-              </Suspense>
-            ),
-          };
-        },
+        element: (
+          <Suspense
+            fallback={<div className="text-center py-10">Loading...</div>}
+          >
+            <BlogRootLayout />
+          </Suspense>
+        ),
         children: [
           {
             index: true,
-            async lazy() {
-              const mod = await import("@/pages/blogs/Blog");
-              const Component = mod.default;
-              return {
-                Component: () => (
-                  <Suspense fallback={<SuspenseFallback />}>
-                    <Component />
-                  </Suspense>
-                ),
-              };
-            },
+            element: (
+              <Suspense
+                fallback={<div className="text-center py-10">Loading...</div>}
+              >
+                <BlogPage />
+              </Suspense>
+            ),
           },
           {
             path: ":postId",
-            async lazy() {
-              const mod = await import("@/pages/blogs/BlogDetail");
-              const Component = mod.default;
-              return {
-                Component: () => (
-                  <Suspense fallback={<SuspenseFallback />}>
-                    <Component />
-                  </Suspense>
-                ),
-              };
-            },
+            element: (
+              <Suspense
+                fallback={<div className="text-center py-10">Loading...</div>}
+              >
+                <BlogDetailPages />
+              </Suspense>
+            ),
           },
         ],
       },
@@ -70,7 +64,16 @@ export const router = createBrowserRouter([
         path: "products",
         Component: ProductRootLayout,
         children: [
-          { index: true, Component: ProductPage },
+          {
+            index: true,
+            element: (
+              <Suspense
+                fallback={<div className="text-center py-10">Loading...</div>}
+              >
+                <ProductPage />
+              </Suspense>
+            ),
+          },
           { path: ":productId", Component: ProductDetailPage },
         ],
       },
@@ -83,9 +86,5 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     Component: RegisterPage,
-  },
-  {
-    path: "/logout",
-    Component: LoginPage,
   },
 ]);
