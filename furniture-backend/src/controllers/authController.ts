@@ -300,6 +300,7 @@ export const confirmPassword = [
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge: 15 * 60 * 1000,
+        path: '/',
       })
       .cookie('refreshToken', refreshToken, {
         httpOnly: true,
@@ -414,12 +415,14 @@ export const login = [
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge: 15 * 60 * 1000,
+        path: '/',
       })
       .cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: '/',
       })
       .status(200)
       .json({
@@ -477,11 +480,13 @@ export const logout = async (
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    path: '/',
   });
   res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    path: '/',
   });
   res.status(200).json({ message: 'Successfully logout' });
 };
