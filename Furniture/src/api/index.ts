@@ -12,6 +12,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       window.location.href = "/lgoin";
+      window.location.href = `/lgoin?redirect =${encodeURIComponent(window.location.pathname)}`; //redirect
     }
     return Promise.reject(error);
   }
