@@ -4,12 +4,13 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const PasswordInput = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<"input">
 >(({ className, ...props }, ref) => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="relative">
@@ -23,17 +24,17 @@ const PasswordInput = React.forwardRef<
         type="button"
         variant="ghost"
         size="sm"
-        className="absolute right-0 top-0 h-full px-3 py-1 hover:bg-transparent"
+        className="absolute top-0 right-0 h-full px-3 py-1 hover:bg-transparent "
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={props.value === "" || props.disabled}
       >
         {showPassword ? (
-          <EyeNoneIcon className="h-4 w-4" aria-hidden="true" />
+          <EyeNoneIcon className="w-4 h-4" aria-hidden="true"></EyeNoneIcon>
         ) : (
-          <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
+          <EyeOpenIcon className="w-4 h-4" aria-hidden="true"></EyeOpenIcon>
         )}
         <span className="sr-only">
-          {showPassword ? "Hide password" : "Show password"}
+          {showPassword ? "Hide Password" : "Show password"}
         </span>
       </Button>
     </div>
