@@ -14,7 +14,11 @@ export const loginAction = async ({ request }: ActionFunctionArgs) => {
     if (response.status !== 200) {
       return { error: response.data || "login Failed" };
     }
-    const redirectTo = new URL(request.url).searchParams.get("redirect") || "/";
+    let redirectTo = new URL(request.url).searchParams.get("redirect") || "/";
+
+    if (redirectTo === "/login") {
+      redirectTo = "/";
+    }
     return redirect(redirectTo);
   } catch (error) {
     if (error instanceof AxiosError) {
