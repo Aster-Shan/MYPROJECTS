@@ -1,4 +1,4 @@
-import { Link, useActionData, useNavigation, useSubmit } from "react-router";
+import { Link } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,9 +26,10 @@ import { PasswordInput } from "./Password-Input";
 const FormSchema = z.object({
   phone: z
     .string()
-    .min(7, "Phone number is too short")
+    .min(7, "Phhone number is too short")
     .max(12, "Phone number is too long")
     .regex(/^\d+$/, "Phone number must be numbers"),
+
   password: z
     .string()
     .min(8, "Password must be 8 digits.")
@@ -37,12 +38,6 @@ const FormSchema = z.object({
 });
 
 export default function LoginForm() {
-  const submit = useSubmit();
-  const navigation = useNavigation();
-  const actionData = useActionData() as { error?: string } | undefined;
-
-  // const isSubmitting = navigation.state === "submitting";
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -51,11 +46,10 @@ export default function LoginForm() {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onSubmit(values: z.infer<typeof FormSchema>) {
-    // console.log(values);
-    submit(values, { method: "post", action: "/login" });
+    console.log("Submit");
   }
-
   return (
     <Card className="mx-auto w-full max-w-md shadow-xl border-0">
       <CardHeader className="space-y-1 text-center">
@@ -82,6 +76,7 @@ export default function LoginForm() {
                       className="h-11 rounded-lg"
                       type="tel"
                       placeholder="0977********"
+                      required
                       inputMode="numeric"
                       {...field}
                     />
@@ -112,30 +107,18 @@ export default function LoginForm() {
                       className="h-11 rounded-lg"
                       inputMode="numeric"
                       {...field}
-                    />
+                      required
+                    ></PasswordInput>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* ERROR */}
-            {actionData?.error && (
-              <p className="text-sm font-medium text-red-500">
-                {actionData.error}
-              </p>
-            )}
-
             {/* BUTTONS */}
             <div className="space-y-3">
-              <Button
-                type="submit"
-                className="w-full h-11 rounded-lg"
-                disabled={navigation.state === "submitting"}
-              >
-                {navigation.state === "submitting"
-                  ? "Signing in..."
-                  : "Sign In"}
+              <Button type="submit" className="w-full h-11 rounded-lg">
+                Sign In
               </Button>
 
               <div className="relative text-center text-sm">
