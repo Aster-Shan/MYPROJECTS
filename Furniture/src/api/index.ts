@@ -11,7 +11,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      window.location.href = `/login?redirect =${encodeURIComponent(window.location.pathname)}`; //redirect
+      const currentPath = window.location.pathname;
+
+      if (currentPath !== "/login") {
+        window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+      }
     }
     return Promise.reject(error);
   }
