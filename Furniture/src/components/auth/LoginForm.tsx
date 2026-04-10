@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useSubmit } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +38,8 @@ const FormSchema = z.object({
 });
 
 export default function LoginForm() {
+  const submit = useSubmit();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -46,9 +48,8 @@ export default function LoginForm() {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onSubmit(values: z.infer<typeof FormSchema>) {
-    console.log("Submit");
+    submit(values, { method: "post", action: "/login" }); //action in routes ==> action file ==>login Action
   }
   return (
     <Card className="mx-auto w-full max-w-md shadow-xl border-0">
