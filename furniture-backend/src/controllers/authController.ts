@@ -332,7 +332,6 @@ export const login = [
     .isLength({ min: 8, max: 8 }),
 
   async (req: Request, res: Response, next: NextFunction) => {
-    // ---------------- VALIDATION ----------------
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
       const error: any = new Error(errors[0].msg);
@@ -341,13 +340,15 @@ export const login = [
       return next(error);
     }
 
-    const { phone, password } = req.body;
+    let { phone, password } = req.body; // ✅ let instead of const
 
-    // ---------------- FIND USER ----------------
+    if (phone.slice(0, 2) === '09') {
+      phone = phone.substring(2, phone.length);
+    }
+
     const user = await getUserByPhone(phone);
     checkUserIfNotExit(user);
 
-    // ---------------- ACCOUNT FREEZE CHECK ----------------
     if (user?.status === 'FREEEZE') {
       const error: any = new Error('Your Account is temporarily freezed');
       error.status = 401;
