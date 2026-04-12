@@ -18,7 +18,7 @@ import RegisterPage from "./pages/auth/Register";
 //   <div className="text-center py-10">Loading...</div>
 // );
 
-import { loginAction } from "./router/action";
+import { loginAction, logoutAction } from "./router/action";
 import { homeLoader } from "./router/loader";
 
 export const router = createBrowserRouter([
@@ -88,5 +88,9 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     Component: RegisterPage,
+  },
+  {
+    path: "/logout",
+    action: logoutAction,
   },
 ]);
