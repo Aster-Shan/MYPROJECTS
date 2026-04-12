@@ -19,7 +19,7 @@ import RegisterPage from "./pages/auth/Register";
 // );
 
 import { loginAction, logoutAction } from "./router/action";
-import { homeLoader } from "./router/loader";
+import { homeLoader, loginLoader } from "./router/loader";
 
 export const router = createBrowserRouter([
   {
@@ -83,6 +83,7 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage,
+    loader: loginLoader,
     action: loginAction,
   },
   {

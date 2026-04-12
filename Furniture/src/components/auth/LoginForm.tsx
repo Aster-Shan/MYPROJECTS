@@ -62,7 +62,9 @@ export default function LoginForm() {
     <Card className="mx-auto w-full max-w-md shadow-xl border-0">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-semibold">Welcome back</CardTitle>
-        <CardDescription>Enter your phone number to login</CardDescription>
+        <CardDescription>
+          Enter your phone number and password to login
+        </CardDescription>
       </CardHeader>
 
       <CardContent>
