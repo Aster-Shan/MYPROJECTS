@@ -1,4 +1,4 @@
-import { Link, useSubmit } from "react-router";
+import { Link, useNavigation, useSubmit } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +39,9 @@ const FormSchema = z.object({
 
 export default function LoginForm() {
   const submit = useSubmit();
+  const navigation = useNavigation();
+
+  const isSubmitting = navigation.state === "submitting";
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -119,7 +122,7 @@ export default function LoginForm() {
             {/* BUTTONS */}
             <div className="space-y-3">
               <Button type="submit" className="w-full h-11 rounded-lg">
-                Sign In
+                {isSubmitting ? "Signing In ...." : " Sign In"}
               </Button>
 
               <div className="relative text-center text-sm">
