@@ -9,7 +9,7 @@ import ProductDetailPage from "@/pages/products/ProductDetail";
 import ProductRootLayout from "@/pages/products/ProductRootLayout";
 import RootLayout from "@/pages/RootLayout";
 import { Suspense } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
 // eslint-disable-next-line react-refresh/only-export-components
@@ -92,5 +92,6 @@ export const router = createBrowserRouter([
   {
     path: "/logout",
     action: logoutAction,
+    loader: () => redirect("/"),
   },
 ]);
