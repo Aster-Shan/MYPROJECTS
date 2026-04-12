@@ -1,4 +1,4 @@
-import { Link, useNavigation, useSubmit } from "react-router";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import { PasswordInput } from "./Password-Input";
 const FormSchema = z.object({
   phone: z
     .string()
-    .min(7, "Phhone number is too short")
+    .min(7, "Phone number is too short")
     .max(12, "Phone number is too long")
     .regex(/^\d+$/, "Phone number must be numbers"),
 
@@ -40,6 +40,10 @@ const FormSchema = z.object({
 export default function LoginForm() {
   const submit = useSubmit();
   const navigation = useNavigation();
+  const actionData = useActionData() as {
+    error?: string;
+    message?: string;
+  };
 
   const isSubmitting = navigation.state === "submitting";
 
@@ -68,7 +72,6 @@ export default function LoginForm() {
             className="space-y-5"
             autoComplete="off"
           >
-            {/* PHONE */}
             <FormField
               control={form.control}
               name="phone"
@@ -90,7 +93,6 @@ export default function LoginForm() {
               )}
             />
 
-            {/* PASSWORD */}
             <FormField
               control={form.control}
               name="password"
@@ -119,7 +121,12 @@ export default function LoginForm() {
               )}
             />
 
-            {/* BUTTONS */}
+            {actionData && (
+              <p className="text-md text-red-600 items-center justify-center">
+                {actionData.message}
+              </p>
+            )}
+
             <div className="space-y-3">
               <Button type="submit" className="w-full h-11 rounded-lg">
                 {isSubmitting ? "Signing In ...." : " Sign In"}
@@ -139,7 +146,6 @@ export default function LoginForm() {
           </form>
         </Form>
 
-        {/* FOOTER */}
         <div className="mt-6 text-center text-sm">
           Don’t have an account?{" "}
           <Link to="/register" className="font-medium underline">
