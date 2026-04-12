@@ -378,7 +378,7 @@ export const login = [
         }
       }
 
-      const error: any = new Error(req.t('wrongPassword'));
+      const error: any = new Error(req.t('password is wrong'));
       error.status = 401;
       error.code = 'ERROR_Invalid';
       return next(error);
