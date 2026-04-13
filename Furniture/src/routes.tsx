@@ -17,6 +17,10 @@ import LoginPage from "./pages/auth/Login";
 //   <div className="text-center py-10">Loading...</div>
 // );
 
+import AuthRootLayout from "./pages/auth/AuthRootLayout";
+import ConfirmPasswordPage from "./pages/auth/ConfirmPassword";
+import OtpPage from "./pages/auth/Otp";
+import SignUpPage from "./pages/auth/SignUp";
 import { loginAction, logoutAction } from "./router/action";
 import { homeLoader, loginLoader } from "./router/loader";
 
@@ -87,6 +91,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/register",
+    Component: AuthRootLayout,
+    children: [
+      { index: true, element: <SignUpPage></SignUpPage> },
+      { path: "otp", Component: OtpPage },
+      { path: "confirm-password", Component: ConfirmPasswordPage },
+    ],
   },
   {
     path: "/logout",
