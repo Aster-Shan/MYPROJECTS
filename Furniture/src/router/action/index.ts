@@ -5,21 +5,29 @@ import { redirect, type ActionFunctionArgs } from "react-router";
 export const loginAction = async ({ request }: ActionFunctionArgs) => {
   //{request}:ActionFunctionArgs only for data
   const formData = await request.formData();
-  const authData = {
-    phone: formData.get("phone"),
-    password: formData.get("password"),
-  };
+  const credentials = Object.fromEntries(formData);
+  // const authData = {
+  //   phone: formData.get("phone"),
+  //   password: formData.get("password"),
+  // };
 
   try {
-    const response = await authApi.post("login", authData);
+    const response = await authApi.post("login", credentials);
     if (response.status !== 200) {
       return { error: response.data || "login Failed" };
     }
-    let redirectTo = new URL(request.url).searchParams.get("redirect") || "/";
 
-    if (redirectTo === "/login") {
-      redirectTo = "/";
-    }
+    // await fetch(import.meta.env.VITE_API_URL + "login", {
+    //   method: "post",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(credentials),
+    //   credentials: "include",
+    // });
+
+    const redirectTo = new URL(request.url).searchParams.get("redirect") || "/";
+
     return redirect(redirectTo);
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -34,5 +42,25 @@ export const logoutAction = async () => {
     return redirect("/login");
   } catch (error) {
     console.error("logout failed", error);
+  }
+};
+
+export const singUpAction = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const credentials = Object.fromEntries(formData);
+
+  try {
+    const response = await authApi.post("register", credentials);
+    if (response.status !== 200) {
+      return { error: response.data || "register Failed" };
+
+      const redirectTo =
+        new URL(request.url).searchParams.get("redirect") || "/";
+      return redirect(redirectTo);
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "register Failed" };
+    } else throw error;
   }
 };

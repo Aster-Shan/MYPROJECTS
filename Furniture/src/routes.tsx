@@ -11,7 +11,6 @@ import RootLayout from "@/pages/RootLayout";
 import { Suspense } from "react";
 import { createBrowserRouter, redirect } from "react-router";
 import LoginPage from "./pages/auth/Login";
-import RegisterPage from "./pages/auth/Register";
 // eslint-disable-next-line react-refresh/only-export-components
 
 // const SuspenseFallback = () => (
@@ -88,7 +87,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "/register",
-    Component: RegisterPage,
   },
   {
     path: "/logout",
