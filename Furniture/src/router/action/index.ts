@@ -48,22 +48,19 @@ export const logoutAction = async () => {
 
 // };
 
-// export const singUpAction = async ({ request }: ActionFunctionArgs) => {
-//   const formData = await request.formData();
-//   const credentials = Object.fromEntries(formData);
+export const registerAction = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const credentials = Object.fromEntries(formData);
 
-//   try {
-//     const response = await authApi.post("register", credentials);
-//     if (response.status !== 200) {
-//       return { error: response.data || "register Failed" };
-
-//       const redirectTo =
-//         new URL(request.url).searchParams.get("redirect") || "/";
-//       return redirect(redirectTo);
-//     }
-//   } catch (error) {
-//     if (error instanceof AxiosError) {
-//       return error.response?.data || { error: "register Failed" };
-//     } else throw error;
-//   }
-// };
+  try {
+    const response = await authApi.post("register", credentials);
+    if (response.status !== 200) {
+      return { error: response.data || "sending OTP Failed" };
+    }
+    return redirect("/register/otp");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "register Failed" };
+    } else throw error;
+  }
+};
