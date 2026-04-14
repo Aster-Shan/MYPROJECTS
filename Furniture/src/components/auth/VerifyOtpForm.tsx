@@ -1,5 +1,5 @@
-function VerifyOtpForm() {
-  return <div>VerifyOtpForm</div>;
-}
+// function VerifyOtpForm() {
+//   return <div>VerifyOtpForm</div>;
+// }
 
-export default VerifyOtpForm;
+// export default VerifyOtpForm;

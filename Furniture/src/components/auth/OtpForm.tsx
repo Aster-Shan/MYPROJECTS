@@ -109,7 +109,9 @@ export function OtpForm() {
             />
 
             <FormDescription className="mt-6">
-              <Link to="#">I no longer have access to this email address.</Link>
+              <Link to="/register" className="hover:underline ">
+                I no longer have access to this Phone number.
+              </Link>
             </FormDescription>
           </CardContent>
 
@@ -123,7 +125,7 @@ export function OtpForm() {
             </Button>
 
             <div className="text-sm text-muted-foreground">
-              Having trouble signing in?{" "}
+              Having trouble signing in?{""}
               <a className="underline underline-offset-4 hover:text-primary">
                 Contact support
               </a>
