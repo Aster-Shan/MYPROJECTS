@@ -56,12 +56,12 @@ export function SignUpForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-2 text-center">
-          <a href="" className="flex flex-col items-center gap-2 font-medium">
+          <Link to="" className="flex flex-col items-center gap-2 font-medium">
             <div className="flex size-8 items-center justify-center rounded-md">
               <Icons.logo className="mr-2 size-6"></Icons.logo>
             </div>
             <span className="sr-only">Futniture Shop</span>
-          </a>
+          </Link>
           <h1 className="text-xl font-bold">Welcome to Futniture Shop</h1>
           <FieldDescription>
             Already have account?
