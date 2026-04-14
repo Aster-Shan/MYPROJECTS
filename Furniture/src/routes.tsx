@@ -93,7 +93,7 @@ export const router = createBrowserRouter([
     path: "/register",
     Component: AuthRootLayout,
     children: [
-      { index: true, element: <SignUpPage></SignUpPage> },
+      { index: true, element: <SignUpPage></SignUpPage>, loader: loginLoader },
       { path: "otp", Component: OtpPage },
       { path: "confirm-password", Component: ConfirmPasswordPage },
     ],
