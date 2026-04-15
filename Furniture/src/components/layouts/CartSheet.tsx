@@ -10,20 +10,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { cartItems } from "@/data/carts";
 import { Link } from "react-router";
-// import { cartItems } from "@/data/carts";
-import CartItem from "@/components/carts/CartItem";
+
 import { Icons } from "@/components/icons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatPrice } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+import CartItem from "../carts/CartItem";
 
 export default function CartSheet() {
-  // const itemCount = 4;
-  // const amountTotal = 190;
-  const itemCount = useCartStore((state) => state.getTotalItems());
-  const amountTotal = useCartStore((state) => state.getTotalPrice());
-  const { carts } = useCartStore();
+  const itemCount = 4;
+  const amountTotal = 190;
 
   return (
     <Sheet>
@@ -52,11 +49,11 @@ export default function CartSheet() {
           </SheetTitle>
         </SheetHeader>
         <Separator className="my-2" />
-        {carts.length > 0 ? (
+        {cartItems.length > 0 ? (
           <>
             <ScrollArea className="my-4 h-[68vh] pb-8">
               <div className="flex-1">
-                {carts.map((cart) => (
+                {cartItems.map((cart) => (
                   <CartItem cart={cart} key={cart.id} />
                 ))}
               </div>

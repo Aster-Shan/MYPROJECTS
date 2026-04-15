@@ -1,8 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/lib/utils";
-import { useCartStore } from "@/store/cartStore";
+
 import type { Cart } from "@/types";
-import Editable from "./Editable";
 
 interface CartProps {
   cart: Cart;
@@ -11,16 +10,6 @@ interface CartProps {
 const imageUrl = import.meta.env.VITE_IMG_URL;
 
 function CartItem({ cart }: CartProps) {
-  const { updateItem, removeItem } = useCartStore();
-
-  const updateHandler = (quantity: number) => {
-    updateItem(cart.id, quantity);
-  };
-
-  const deleteHandler = () => {
-    removeItem(cart.id);
-  };
-
   return (
     <div className="space-y-3">
       <div className="mb-2 mt-4 flex gap-4">
@@ -42,11 +31,7 @@ function CartItem({ cart }: CartProps) {
           </span> */}
         </div>
       </div>
-      <Editable
-        onDelete={deleteHandler}
-        quantity={cart.quantity}
-        onUpdate={updateHandler}
-      />
+
       <Separator />
     </div>
   );
