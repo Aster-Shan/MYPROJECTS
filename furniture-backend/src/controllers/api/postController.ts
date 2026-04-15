@@ -169,12 +169,13 @@ export const getinfinitePostsByPagination = [
     if (hasNextPage) {
       posts.pop();
     }
-    const newCursor = posts.length > 0 ? posts[posts.length - 1].id : null;
+    const nextCursor = posts.length > 0 ? posts[posts.length - 1].id : null;
 
     res.status(200).json({
       message: 'Get all Infinite posts',
       hasNextPage,
-      newCursor,
+      nextCursor,
+      prevCursor: lastCursor,
       posts,
     });
   },

@@ -119,13 +119,14 @@ export const getProductsByPagination = [
     if (hasNextPage) {
       products.pop();
     }
-    const newCursor =
+    const nextCursor =
       products.length > 0 ? products[products.length - 1].id : null;
 
     res.status(200).json({
       message: 'Get all Infinite products',
       hasNextPage,
-      newCursor,
+      nextCursor,
+      prevCursor: lastCursor,
       products,
     });
   },
