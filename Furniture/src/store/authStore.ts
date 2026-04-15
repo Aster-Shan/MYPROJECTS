@@ -16,36 +16,31 @@ type State = {
   status: Status;
 };
 
-const initialState: State = {
+const initialStates: State = {
   phone: null,
   token: null,
   status: Status.none,
 };
-
 type Actions = {
   setAuth: (phone: string, token: string, status: Status) => void;
   clearAuth: () => void;
 };
-
 const useAuthStore = create<State & Actions>()(
   persist(
     immer((set) => ({
-      ...initialState,
-
+      ...initialStates,
       setAuth: (phone, token, status) =>
         set((state) => {
           state.phone = phone;
           state.token = token;
           state.status = status;
         }),
-
-      clearAuth: () => set(initialState),
+      clearAuth: () => set(initialStates),
     })),
     {
-      name: "auth-credentials", // key for sessionStorage
+      name: "auth-credentials",
       storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
-
 export default useAuthStore;
