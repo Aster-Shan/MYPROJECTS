@@ -2,13 +2,9 @@ import BlogCard from "@/components/blogs/BlogCard";
 import CarouselCard from "@/components/products/CarouselCard";
 import ProductCard from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
-import { posts } from "@/data/posts";
-import { products } from "@/data/products";
+import type { Product } from "@/types";
 import { Link, useLoaderData } from "react-router-dom";
 import Couch from "../data/images/couch.png";
-
-const samplePost = posts.slice(0, 3);
-const sampleProducts = products.slice(0, 4);
 
 function Home() {
   const { productsData, postsData } = useLoaderData();
@@ -66,7 +62,8 @@ function Home() {
 
       {/* Carousel */}
       <section className="container px-4">
-        <CarouselCard products={productsData.products} />
+        <CarouselCard products={productsData.products} />{" "}
+        {/**give data to CarouselCard */}
       </section>
 
       {/* Product Card Section Title */}
@@ -77,14 +74,14 @@ function Home() {
         sideText="View All Products"
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-4 lg:px-0 gap-6">
-        {sampleProducts.map((product) => (
+        {productsData.products.slice(0, 4).map((product: Product) => (
           <ProductCard product={product} key={product.id}></ProductCard>
         ))}
       </div>
 
       {/* Blog Section Title */}
       <Title title="Recent Blog" href="/blogs" sideText="View All Blog" />
-      <BlogCard posts={samplePost}></BlogCard>
+      <BlogCard posts={postsData.posts}></BlogCard>
     </div>
   );
 }
