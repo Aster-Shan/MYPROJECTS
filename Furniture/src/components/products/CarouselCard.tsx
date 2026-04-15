@@ -26,7 +26,7 @@ export default function CarouselCard({ products }: ProductProps) {
       }}
       plugins={[
         Autoplay({
-          delay: 2000,
+          delay: 1500,
         }),
       ]}
     >
