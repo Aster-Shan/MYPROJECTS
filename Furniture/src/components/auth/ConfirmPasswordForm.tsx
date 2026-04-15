@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import { z } from "zod";
@@ -47,6 +48,8 @@ export function ConfirmPasswordForm({
     message?: string;
   };
 
+  const [clientError, setClientError] = useState<string | null>(null);
+
   const isSubmitting = navigation.state === "submitting";
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -57,6 +60,11 @@ export function ConfirmPasswordForm({
   });
 
   function onSubmit(values: z.infer<typeof FormSchema>) {
+    if (values.password !== values.confirmpassword) {
+      setClientError("Passwords do not match");
+      return;
+    }
+    setClientError(null);
     submit(values, { method: "post", action: "/register/confirm-password" });
   }
 
@@ -119,9 +127,19 @@ export function ConfirmPasswordForm({
               )}
             />
             {actionData && (
+              <div className="flex gap-2">
+                <p className="text-md text-red-500 "> {actionData.message}</p>
+                <Link
+                  to="/register"
+                  className="text-md underline underline-offset-4"
+                >
+                  Go back to register
+                </Link>
+              </div>
+            )}
+            {clientError && (
               <p className="text-md text-red-500 "> {actionData.message}</p>
             )}
-
             <div className="space-y-3">
               <Button type="submit" className="w-full h-11 rounded-lg">
                 {isSubmitting ? "Loading ....." : "Confirm"}
