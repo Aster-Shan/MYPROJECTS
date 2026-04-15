@@ -124,12 +124,12 @@ export function OtpForm() {
               {isSubmitting ? "Verifying ...." : "Verify"}
             </Button>
 
-            <div className="text-sm text-muted-foreground">
+            {/* <div className="text-sm text-muted-foreground">
               Having trouble signing in?{""}
               <a className="underline underline-offset-4 hover:text-primary">
                 Contact support
               </a>
-            </div>
+            </div> */}
           </CardFooter>
         </form>
       </Form>
