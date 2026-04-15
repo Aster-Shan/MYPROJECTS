@@ -16,7 +16,7 @@ import { Icons } from "../ui/icons";
 interface productProps extends React.HTMLAttributes<HTMLDivElement> {
   product: Product;
 }
-
+const imageUrl = import.meta.env.VITE_ASSET_URL;
 function ProductCard({ product, className }: productProps) {
   return (
     <Card className={cn("size-full overflow-hidden rounded-lg", className)}>
@@ -24,10 +24,11 @@ function ProductCard({ product, className }: productProps) {
         <CardHeader className="border-b p-0">
           <AspectRatio ratio={1 / 1} className="bg-muted">
             <img
-              src={product.images[0]}
-              alt="Image"
-              className="size-full object-cover"
+              src={imageUrl + product.images[0]?.path}
+              alt={product.name}
               loading="lazy"
+              decoding="async"
+              className="size-full object-contain"
             />
           </AspectRatio>
         </CardHeader>

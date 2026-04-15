@@ -9,12 +9,13 @@ import {
 } from "@/components/ui/carousel";
 import type { Product } from "@/types";
 import { Link } from "react-router-dom";
-const VITE_ASSET_URL = import.meta.env.VITE_ASSET_URL;
 interface ProductProps {
   products: Product[];
 }
 
+const imageUrl = import.meta.env.VITE_ASSET_URL;
 export default function CarouselCard({ products }: ProductProps) {
+  //receive api data from home by {products}
   //   const plugin = React.useRef(
   //     Autoplay({ delay: 2000, stopOnInteraction: true })
   //   );
@@ -36,11 +37,11 @@ export default function CarouselCard({ products }: ProductProps) {
           <CarouselItem key={product.id} className="pl-1 lg:basis-1/3">
             <div className="flex lg:px-4 gap-4 p-4 ">
               <img
-                src={`${VITE_ASSET_URL}${product.images[0]?.path}`}
+                src={imageUrl + product.images[0]?.path}
                 alt={product.name}
                 loading="lazy"
                 decoding="async"
-                className="size-28 rounded-md"
+                className="h-28 rounded-md"
               />
               <div className="">
                 <h3 className="text-sm font-bold line-clamp-1">
@@ -52,7 +53,7 @@ export default function CarouselCard({ products }: ProductProps) {
                     : product.description}
                 </p>
                 <Link
-                  to={"/products/${product.id"}
+                  to={`/products/${product.id}`}
                   className="text-sm font-semibold text-green-800 hover:underline"
                 >
                   Read More

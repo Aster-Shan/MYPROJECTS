@@ -162,7 +162,7 @@ export const getinfinitePostsByPagination = [
         },
       },
       orderBy: {
-        id: 'asc',
+        id: 'desc',
       },
     };
     // const posts = await getPostsList(options);

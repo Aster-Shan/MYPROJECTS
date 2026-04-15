@@ -41,7 +41,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compression());
-app.use(limiter);
+app.use('/api/v1', limiter);
 
 i18next
   .use(Backend)
