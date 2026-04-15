@@ -22,6 +22,7 @@ import ConfirmPasswordPage from "./pages/auth/ConfirmPassword";
 import OtpPage from "./pages/auth/Otp";
 import SignUpPage from "./pages/auth/SignUp";
 import {
+  confirmAction,
   loginAction,
   logoutAction,
   otpAction,
@@ -114,6 +115,7 @@ export const router = createBrowserRouter([
         path: "confirm-password",
         Component: ConfirmPasswordPage,
         loader: confirmLoader,
+        action: confirmAction,
       },
     ],
   },

@@ -74,3 +74,26 @@ export const otpAction = async ({ request }: ActionFunctionArgs) => {
     } else throw error;
   }
 };
+
+export const confirmAction = async ({ request }: ActionFunctionArgs) => {
+  const authStore = useAuthStore.getState();
+
+  const formData = await request.formData();
+  const credentials = {
+    phone: authStore.phone,
+    password: formData.get("password"),
+    token: authStore.token,
+  };
+  try {
+    const response = await authApi.post("confirm-password", credentials);
+    if (response.status !== 200) {
+      return { error: response.data || "Registration Failed" };
+    }
+    authStore.clearAuth();
+    return redirect("/");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Registration Failed" };
+    } else throw error;
+  }
+};
