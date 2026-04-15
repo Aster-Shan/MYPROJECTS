@@ -38,6 +38,8 @@ export default function CarouselCard({ products }: ProductProps) {
               <img
                 src={`${VITE_ASSET_URL}${product.images[0]?.path}`}
                 alt={product.name}
+                loading="lazy"
+                decoding="async"
                 className="size-28 rounded-md"
               />
               <div className="">
@@ -45,13 +47,9 @@ export default function CarouselCard({ products }: ProductProps) {
                   {product.name}
                 </h3>
                 <p className="my-2 text-sm text-gray-600 line-clamp-2">
-                  {
-                    product.description
-
-                    //   product.description.length > 55
-                    //     ? product.description.substring(0, 55) + " ... "
-                    //     : product.description
-                  }
+                  {product.description.length > 55
+                    ? product.description.substring(0, 55) + " ... "
+                    : product.description}
                 </p>
                 <Link
                   to={"/products/${product.id"}
