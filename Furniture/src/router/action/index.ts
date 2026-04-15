@@ -86,7 +86,7 @@ export const confirmAction = async ({ request }: ActionFunctionArgs) => {
   };
   try {
     const response = await authApi.post("confirm-password", credentials);
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       return { error: response.data || "Registration Failed" };
     }
     authStore.clearAuth();
