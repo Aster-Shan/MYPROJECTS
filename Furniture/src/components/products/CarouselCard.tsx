@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import type { Product } from "@/types";
 import { Link } from "react-router-dom";
+const VITE_ASSET_URL = import.meta.env.VITE_ASSET_URL;
 interface ProductProps {
   products: Product[];
 }
@@ -35,8 +36,8 @@ export default function CarouselCard({ products }: ProductProps) {
           <CarouselItem key={product.id} className="pl-1 lg:basis-1/3">
             <div className="flex lg:px-4 gap-4 p-4 ">
               <img
-                src={product.images[0]}
-                alt="image"
+                src={`${VITE_ASSET_URL}${product.images[0]?.path}`}
+                alt={product.name}
                 className="size-28 rounded-md"
               />
               <div className="">

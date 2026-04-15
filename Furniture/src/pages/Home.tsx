@@ -4,13 +4,14 @@ import ProductCard from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
 import { posts } from "@/data/posts";
 import { products } from "@/data/products";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import Couch from "../data/images/couch.png";
 
 const samplePost = posts.slice(0, 3);
 const sampleProducts = products.slice(0, 4);
 
 function Home() {
+  const { productsData, postsData } = useLoaderData();
   const Title = ({
     title,
     href,
@@ -65,7 +66,7 @@ function Home() {
 
       {/* Carousel */}
       <section className="container px-4">
-        <CarouselCard products={products} />
+        <CarouselCard products={productsData.products} />
       </section>
 
       {/* Product Card Section Title */}
