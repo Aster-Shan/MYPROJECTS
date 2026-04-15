@@ -39,12 +39,12 @@ router.patch(
 
 router.get('/profile/my-photo', getMyPhoto); //just testing
 
+router.get('/posts/infinite', auth, getinfinitePostsByPagination); //cursor pagination
 router.get('/posts/:id', auth, getPost);
 router.get('/posts', auth, getPostsByPagination); //offsetPagination
-router.get('/posts/infinite', auth, getinfinitePostsByPagination); //cursor pagination
 
+router.get('/products', auth, getProductsByPagination); //cursor pagination
 router.get('/products/:id', auth, getProduct);
 // router.get('/products', auth, getProductsByPagination); //offsetPagination
-router.get('/products', auth, getProductsByPagination); //cursor pagination
 
 export default router;

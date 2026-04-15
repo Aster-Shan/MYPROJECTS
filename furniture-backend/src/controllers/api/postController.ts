@@ -61,7 +61,7 @@ export const getPostsByPagination = [
     gt: 0,
   }),
   query('limit', 'limit number mjust be unsigned number').optional().isInt({
-    gt: 4,
+    gt: 2,
   }),
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
@@ -120,12 +120,19 @@ export const getPostsByPagination = [
   },
 ];
 export const getinfinitePostsByPagination = [
-  query('cursor', 'Cursor must be Post ID').isInt({ gt: 0 }).optional(),
+  query('cursor', 'Cursor must be Post ID')
+    .optional({ checkFalsy: true })
+    .isInt({ gt: 0 })
+    .toInt(),
 
-  query('Limit', 'Limit number must be unsigned integar.')
-    .isInt({ gt: 4 })
-    .optional(),
+  query('Limit', 'Limit number must be unsigned integer.')
+    .optional()
+    .isInt({ gt: 2 })
+    .toInt(),
+
   async (req: CustomRequest, res: Response, next: NextFunction) => {
+    console.log('RAW QUERY:', req.query);
+    console.log('ALL ERRORS:', validationResult(req).array());
     const errors = validationResult(req).array({ onlyFirstError: true });
     if (errors.length > 0) {
       return next(createError(errors[0].msg, 400, errorCode.invalid));
