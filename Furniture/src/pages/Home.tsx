@@ -1,13 +1,71 @@
+import { postQuery, productQuery } from "@/api/query";
 import BlogCard from "@/components/blogs/BlogCard";
 import CarouselCard from "@/components/products/CarouselCard";
 import ProductCard from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Link, useLoaderData } from "react-router-dom";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import Couch from "../data/images/couch.png";
 
 function Home() {
-  const { productsData, postsData } = useLoaderData();
+  // const { productsData, postsData } = useLoaderData();
+
+  // const {
+  //   data: productsData,
+  //   isLoading: isLoadingProducts,
+  //   isError: isErrorProducts,
+  //   error: productError,
+  //   refetch: productRefetch,
+  // } = useQuery(productQuery("?limit=8"));
+  // const {
+  //   data: postsData,
+  //   isLoading: isLoadingPosts,
+  //   isError: isErrorPosts,
+  //   error: postError,
+  //   refetch: postRefetch,
+  // } = useQuery(postQuery("?limit=3"));
+
+  // if (isLoadingProducts && isLoadingPosts) {
+  //   return (
+  //     <div className="text-center">
+  //       <Card className="w-full max-w-xs">
+  //         <CardHeader>
+  //           <Skeleton className="h-4 w-2/3" />
+  //           <Skeleton className="h-4 w-1/2" />
+  //         </CardHeader>
+  //         <CardContent>
+  //           <Skeleton className="aspect-video w-full" />
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   );
+  // }
+
+  // if (isErrorProducts && isErrorPosts) {
+  //   return (
+  //     <div className="container mx-auto my-32 flex flex-1 place-content-center">
+  //       <div className="text-center text-red-400">
+  //         <p className="mb-4">
+  //           {productError.message} & {postError.message}
+  //         </p>
+  //         <Button
+  //           onClick={() => {
+  //             productRefetch();
+  //             postRefetch();
+  //           }}
+  //           variant="secondary"
+  //         >
+  //           Retry
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  const { data: productsData } = useSuspenseQuery(productQuery("?limit=8"));
+  const { data: postsData } = useSuspenseQuery(postQuery("?limit=3"));
+
   const Title = ({
     title,
     href,
@@ -62,7 +120,8 @@ function Home() {
 
       {/* Carousel */}
       <section className="container px-4">
-        <CarouselCard products={productsData.products} />{" "}
+        {productsData && <CarouselCard products={productsData.products} />}
+
         {/**give data to CarouselCard */}
       </section>
 
@@ -81,7 +140,7 @@ function Home() {
 
       {/* Blog Section Title */}
       <Title title="Recent Blog" href="/blogs" sideText="View All Blog" />
-      <BlogCard posts={postsData.posts}></BlogCard>
+      {postsData && <BlogCard posts={postsData.posts}></BlogCard>}
     </div>
   );
 }
