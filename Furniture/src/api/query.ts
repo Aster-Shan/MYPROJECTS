@@ -10,14 +10,16 @@ export const queryClient = new QueryClient({
 });
 const fetchproducts = (q?: string) =>
   api.get(`users/products${q ?? ""}`).then((res) => res.data);
+
 export const productQuery = (q?: string) => ({
   queryKey: ["products", q],
-  queryFn: fetchproducts,
+  queryFn: () => fetchproducts(q),
 });
 
 const fetchPosts = (q?: string) =>
   api.get(`users/posts/infinite${q ?? ""}`).then((res) => res.data);
+
 export const postQuery = (q?: string) => ({
   queryKey: ["posts", q],
-  queryFn: fetchPosts,
+  queryFn: () => fetchPosts(q),
 });
