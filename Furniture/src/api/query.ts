@@ -23,3 +23,16 @@ export const postQuery = (q?: string) => ({
   queryKey: ["posts", q],
   queryFn: () => fetchPosts(q),
 });
+
+const fetchInfinitePosts = async ({ pageParam = null }) => {
+  const query = pageParam ? `?limit=6&cursor=${pageParam}` : "?limit=6";
+  const response = await api.get(`users/posts/infinite${query}`);
+  return response.data;
+};
+export const postInfiniteQuery = () => ({
+  queryKey: ["posts", "infinite"],
+  querfFn: fetchInfinitePosts,
+  initialPageParam: null,
+  getNextPageParam: (lastpage, pages) => lastpage.nextCursor ?? undefined,
+  // getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor?? undefined,
+});
