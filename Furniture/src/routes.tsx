@@ -29,6 +29,7 @@ import {
   registerAction,
 } from "./router/action";
 import {
+  blogInfiniteLoader,
   confirmLoader,
   homeLoader,
   loginLoader,
@@ -66,6 +67,7 @@ export const router = createBrowserRouter([
                 <BlogPage />
               </Suspense>
             ),
+            loader: blogInfiniteLoader,
           },
           {
             path: ":postId",
