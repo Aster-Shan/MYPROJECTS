@@ -31,7 +31,7 @@ const fetchInfinitePosts = async ({ pageParam = null }) => {
 };
 export const postInfiniteQuery = () => ({
   queryKey: ["posts", "infinite"],
-  querfFn: fetchInfinitePosts,
+  queryFn: fetchInfinitePosts,
   initialPageParam: null,
   getNextPageParam: (lastpage, pages) => lastpage.nextCursor ?? undefined,
   // getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor?? undefined,
