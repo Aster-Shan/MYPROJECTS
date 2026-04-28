@@ -1,4 +1,6 @@
+import type { QueryFunctionContext } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/react-query";
+
 import api from ".";
 
 export const queryClient = new QueryClient({
@@ -35,4 +37,22 @@ export const postInfiniteQuery = () => ({
   initialPageParam: null,
   getNextPageParam: (lastpage, pages) => lastpage.nextCursor ?? undefined,
   // getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor?? undefined,
+});
+
+const fetchOnePost = async ({ queryKey }: QueryFunctionContext) => {
+  const [, , id] = queryKey;
+  if (typeof id !== "number") {
+    throw new Error("Invalid post ID");
+  }
+
+  const post = await api.get(`users/posts/${id}`);
+  if (!post?.data) {
+    throw new Response("", { status: 404, statusText: "Not Found" });
+  }
+  return post.data;
+};
+
+export const OnePostQuery = (id: number) => ({
+  queryKey: ["posts", "detail", id],
+  queryFn: fetchOnePost,
 });
