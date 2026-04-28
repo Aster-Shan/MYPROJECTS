@@ -34,6 +34,7 @@ import {
   homeLoader,
   loginLoader,
   otpLoader,
+  postLoader,
 } from "./router/loader";
 
 export const router = createBrowserRouter([
@@ -78,6 +79,7 @@ export const router = createBrowserRouter([
                 <BlogDetailPages />
               </Suspense>
             ),
+            loader: postLoader,
           },
         ],
       },
