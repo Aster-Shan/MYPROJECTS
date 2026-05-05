@@ -132,3 +132,12 @@ export const getProductsByPagination = [
     });
   },
 ];
+export const getfiltertype = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = req.userId;
+  const user = await getUserById(userId!);
+  checkUserIfNotExit(user);
+};
