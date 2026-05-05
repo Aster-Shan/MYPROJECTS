@@ -50,10 +50,11 @@ export const register = [
 
     const OTP = 123456;
     //hash OTP
+
     const salt = await bcrypt.genSalt(10);
     const hsahOTP = await bcrypt.hash(OTP.toString(), salt);
-
     const token = generateToken();
+
     //never request OTP before
     const otpRow = await getOTPbyPhone(phone);
     let result;
@@ -186,7 +187,6 @@ export const verifyOTP = [
       return next(error);
     }
 
-    //All are ok
     const verifyToken = generateToken();
     const otpData = {
       verifyToken,
