@@ -3,8 +3,10 @@ import { param, query, validationResult } from 'express-validator';
 import { errorCode } from '../../../config/errorCode';
 import { getUserById } from '../../services/authService';
 import {
+  getCategoryList,
   getProductsList,
   getProductWithRelations,
+  getTypeList,
 } from '../../services/productService';
 import { checkUserIfNotExit } from '../../utils/auth';
 import { getOrSetCache } from '../../utils/cache';
@@ -140,4 +142,12 @@ export const getfiltertype = async (
   const userId = req.userId;
   const user = await getUserById(userId!);
   checkUserIfNotExit(user);
+
+  const categories = await getCategoryList();
+  const types = await getTypeList();
+  res.status(200).json({
+    message: 'Categories & Types',
+    categories,
+    types,
+  });
 };
