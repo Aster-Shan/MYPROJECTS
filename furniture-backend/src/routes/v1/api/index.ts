@@ -1,11 +1,12 @@
 import express from 'express';
 
 import {
+  getinfinitePostsByPagination,
   getPost,
   getPostsByPagination,
-  getinfinitePostsByPagination,
 } from '../../../controllers/api/postController';
 import {
+  getfiltertype,
   getProduct,
   getProductsByPagination,
 } from '../../../controllers/api/productController';
@@ -45,6 +46,7 @@ router.get('/posts', auth, getPostsByPagination); //offsetPagination
 
 router.get('/products', auth, getProductsByPagination); //cursor pagination
 router.get('/products/:id', auth, getProduct);
+router.get('/filter-type', auth, getfiltertype);
 // router.get('/products', auth, getProductsByPagination); //offsetPagination
 
 export default router;
